@@ -5,18 +5,6 @@ import (
 	"fmt"
 )
 
-func StepFunction(input []int, n Neuron) int {
-	value := 0
-	for wi, w := range n.Weights {
-		value = value + (input[wi] * w)
-	}
-	if value-n.Threshold < 0 {
-		return 0
-	} else {
-		return 1
-	}
-}
-
 type Network struct {
 	inputNeurons int
 	layers       [][]Neuron
@@ -55,10 +43,10 @@ type NeuralNetworkBuilder struct {
 	activation   ActivationFunction
 }
 
-func NewNeuralNetworkBuilder(inputNeurons int) *NeuralNetworkBuilder {
+func NewNeuralNetworkBuilder(inputNeurons int, activation ActivationFunction) *NeuralNetworkBuilder {
 	return &NeuralNetworkBuilder{
 		inputNeurons: inputNeurons,
-		activation:   StepFunction,
+		activation:   activation,
 	}
 }
 

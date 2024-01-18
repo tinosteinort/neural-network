@@ -6,24 +6,19 @@ import (
 )
 
 type Network struct {
-	input  []inputNeuron
-	layers [][]layerNeuron
+	inputNeurons int
+	layers       [][]Neuron
 }
 
-type inputNeuron struct {
-	value int
-}
-
-type layerNeuron struct {
-	threshold int
-	weights   []int
+type Neuron struct {
+	Weights   []int
+	Threshold int
 }
 
 func (n *Network) Run(input []int) ([]int, error) {
-	if len(input) != len(n.input) {
+	if len(input) != n.inputNeurons {
 		return nil, errors.New("input values does not match input neuron count")
 	}
-
 	var values = input
 	for _, layer := range n.layers {
 		values = calculateLayer(values, layer)
@@ -31,7 +26,7 @@ func (n *Network) Run(input []int) ([]int, error) {
 	return values, nil
 }
 
-func calculateLayer(layerInput []int, layerNeurons []layerNeuron) []int {
+func calculateLayer(layerInput []int, layerNeurons []Neuron) []int {
 	result := make([]int, len(layerNeurons))
 	for lni, n := range layerNeurons {
 		result[lni] = activate(layerInput, n)
@@ -39,12 +34,12 @@ func calculateLayer(layerInput []int, layerNeurons []layerNeuron) []int {
 	return result
 }
 
-func activate(layerInput []int, n layerNeuron) int {
+func activate(layerInput []int, n Neuron) int {
 	value := 0
-	for wi, w := range n.weights {
+	for wi, w := range n.Weights {
 		value = value + (layerInput[wi] * w)
 	}
-	if value-n.threshold < 0 {
+	if value-n.Threshold < 0 {
 		return 0
 	} else {
 		return 1
@@ -60,11 +55,6 @@ type Layer struct {
 	Neurons []Neuron
 }
 
-type Neuron struct {
-	Weights   []int
-	Threshold int
-}
-
 func NewNeuralNetworkBuilder(inputNeurons int) *NeuralNetworkBuilder {
 	return &NeuralNetworkBuilder{
 		inputNeurons: inputNeurons,
@@ -72,14 +62,13 @@ func NewNeuralNetworkBuilder(inputNeurons int) *NeuralNetworkBuilder {
 }
 
 func (b *NeuralNetworkBuilder) Build() (*Network, error) {
-
 	if len(b.layers) == 0 {
 		return nil, errors.New("no layer defined")
 	}
 
-	var layers [][]layerNeuron
+	var layers [][]Neuron
 	for layerIndex, layer := range b.layers {
-		var layerNeurons []layerNeuron
+		var layerNeurons []Neuron
 		for _, neuron := range layer.Neurons {
 
 			if layerIndex == 0 {
@@ -93,17 +82,14 @@ func (b *NeuralNetworkBuilder) Build() (*Network, error) {
 				}
 			}
 
-			layerNeurons = append(layerNeurons, layerNeuron{
-				threshold: neuron.Threshold,
-				weights:   neuron.Weights,
-			})
+			layerNeurons = layer.Neurons
 		}
 		layers = append(layers, layerNeurons)
 	}
 
 	return &Network{
-		input:  make([]inputNeuron, b.inputNeurons),
-		layers: layers,
+		inputNeurons: b.inputNeurons,
+		layers:       layers,
 	}, nil
 }
 

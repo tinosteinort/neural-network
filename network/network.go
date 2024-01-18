@@ -25,14 +25,12 @@ func (n *Network) Update(input []bool) error {
 		return errors.New("input values does not match input neuron count")
 	}
 
+	var layerInput = input
 	for li, layer := range n.layers {
-		var layerInput []bool
-		if li == 0 {
-			layerInput = input
-		} else {
+		if li > 0 {
 			layerInput = valuesOf(n.layers[li-1])
 		}
-		calculateLayer(layerInput, layer)
+		updateLayer(layerInput, layer)
 	}
 	return nil
 }
@@ -45,13 +43,13 @@ func valuesOf(l []layerNeuron) []bool {
 	return result
 }
 
-func calculateLayer(layerInput []bool, layerNeurons []layerNeuron) {
+func updateLayer(layerInput []bool, layerNeurons []layerNeuron) {
 	for lni, n := range layerNeurons {
-		layerNeurons[lni].value = activation(layerInput, n)
+		layerNeurons[lni].value = activate(layerInput, n)
 	}
 }
 
-func activation(layerInput []bool, n layerNeuron) bool {
+func activate(layerInput []bool, n layerNeuron) bool {
 	value := 0
 	for wi, w := range n.weights {
 		v := 0

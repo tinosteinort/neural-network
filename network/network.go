@@ -48,11 +48,7 @@ func activate(layerInput []int, n Neuron) int {
 
 type NeuralNetworkBuilder struct {
 	inputNeurons int
-	layers       []Layer
-}
-
-type Layer struct {
-	Neurons []Neuron
+	layers       [][]Neuron
 }
 
 func NewNeuralNetworkBuilder(inputNeurons int) *NeuralNetworkBuilder {
@@ -68,23 +64,19 @@ func (b *NeuralNetworkBuilder) Build() (*Network, error) {
 
 	var layers [][]Neuron
 	for layerIndex, layer := range b.layers {
-		var layerNeurons []Neuron
-		for _, neuron := range layer.Neurons {
-
+		for _, neuron := range layer {
 			if layerIndex == 0 {
 				if len(neuron.Weights) != b.inputNeurons {
 					return nil, errors.New("weight count does not match input neuron count")
 				}
 			} else {
 				previousLayer := b.layers[layerIndex-1]
-				if len(neuron.Weights) != len(previousLayer.Neurons) {
+				if len(neuron.Weights) != len(previousLayer) {
 					return nil, errors.New(fmt.Sprintf("weight count does not match previous layer[%d] neuron count", layerIndex-1))
 				}
 			}
-
-			layerNeurons = layer.Neurons
 		}
-		layers = append(layers, layerNeurons)
+		layers = append(layers, layer)
 	}
 
 	return &Network{
@@ -94,8 +86,6 @@ func (b *NeuralNetworkBuilder) Build() (*Network, error) {
 }
 
 func (b *NeuralNetworkBuilder) WithLayer(neurons []Neuron) *NeuralNetworkBuilder {
-	b.layers = append(b.layers, Layer{
-		Neurons: neurons,
-	})
+	b.layers = append(b.layers, neurons)
 	return b
 }

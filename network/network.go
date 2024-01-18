@@ -37,17 +37,6 @@ func (n *Network) Update(input []bool) error {
 	return nil
 }
 
-func calculateLayer(layerInput []bool, layerNeurons []layerNeuron) {
-	for lni, n := range layerNeurons {
-		neuronValue := calculateValue(layerInput, n)
-		if neuronValue >= n.threshold {
-			layerNeurons[lni].value = true
-		} else {
-			layerNeurons[lni].value = false
-		}
-	}
-}
-
 func valuesOf(l []layerNeuron) []bool {
 	var result []bool
 	for _, neuron := range l {
@@ -56,20 +45,22 @@ func valuesOf(l []layerNeuron) []bool {
 	return result
 }
 
-func calculateValue(layerInput []bool, n layerNeuron) int {
-	value := 0
-	for wi, w := range n.weights {
-		v := boolAsNumber(layerInput[wi])
-		value = value + (v * w)
+func calculateLayer(layerInput []bool, layerNeurons []layerNeuron) {
+	for lni, n := range layerNeurons {
+		layerNeurons[lni].value = activation(layerInput, n)
 	}
-	return value
 }
 
-func boolAsNumber(b bool) int {
-	if b {
-		return 1
+func activation(layerInput []bool, n layerNeuron) bool {
+	value := 0
+	for wi, w := range n.weights {
+		v := 0
+		if layerInput[wi] {
+			v = 1
+		}
+		value = value + (v * w)
 	}
-	return 0
+	return value >= n.threshold
 }
 
 func (n *Network) Output(i int) bool {

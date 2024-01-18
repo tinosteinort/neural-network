@@ -11,16 +11,16 @@ type Network struct {
 }
 
 type inputNeuron struct {
-	value bool
+	value int
 }
 
 type layerNeuron struct {
-	value     bool
+	value     int
 	threshold int
 	weights   []int
 }
 
-func (n *Network) Update(input []bool) error {
+func (n *Network) Update(input []int) error {
 	if len(input) != len(n.input) {
 		return errors.New("input values does not match input neuron count")
 	}
@@ -35,33 +35,33 @@ func (n *Network) Update(input []bool) error {
 	return nil
 }
 
-func valuesOf(l []layerNeuron) []bool {
-	var result []bool
+func valuesOf(l []layerNeuron) []int {
+	var result []int
 	for _, neuron := range l {
 		result = append(result, neuron.value)
 	}
 	return result
 }
 
-func updateLayer(layerInput []bool, layerNeurons []layerNeuron) {
+func updateLayer(layerInput []int, layerNeurons []layerNeuron) {
 	for lni, n := range layerNeurons {
 		layerNeurons[lni].value = activate(layerInput, n)
 	}
 }
 
-func activate(layerInput []bool, n layerNeuron) bool {
+func activate(layerInput []int, n layerNeuron) int {
 	value := 0
 	for wi, w := range n.weights {
-		v := 0
-		if layerInput[wi] {
-			v = 1
-		}
-		value = value + (v * w)
+		value = value + (layerInput[wi] * w)
 	}
-	return value >= n.threshold
+	if value-n.threshold < 0 {
+		return 0
+	} else {
+		return 1
+	}
 }
 
-func (n *Network) Output(i int) bool {
+func (n *Network) Output(i int) int {
 	return n.layers[len(n.layers)-1][i].value
 }
 

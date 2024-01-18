@@ -5,39 +5,10 @@ import (
 	"fmt"
 )
 
-type Network struct {
-	inputNeurons int
-	layers       [][]Neuron
-}
-
-type Neuron struct {
-	Weights   []int
-	Threshold int
-}
-
-func (n *Network) Run(input []int) ([]int, error) {
-	if len(input) != n.inputNeurons {
-		return nil, errors.New("input values does not match input neuron count")
-	}
-	var values = input
-	for _, layer := range n.layers {
-		values = calculateLayer(values, layer)
-	}
-	return values, nil
-}
-
-func calculateLayer(layerInput []int, layerNeurons []Neuron) []int {
-	result := make([]int, len(layerNeurons))
-	for lni, n := range layerNeurons {
-		result[lni] = activate(layerInput, n)
-	}
-	return result
-}
-
-func activate(layerInput []int, n Neuron) int {
+func StepFunction(input []int, n Neuron) int {
 	value := 0
 	for wi, w := range n.Weights {
-		value = value + (layerInput[wi] * w)
+		value = value + (input[wi] * w)
 	}
 	if value-n.Threshold < 0 {
 		return 0
@@ -46,14 +17,48 @@ func activate(layerInput []int, n Neuron) int {
 	}
 }
 
+type Network struct {
+	inputNeurons int
+	layers       [][]Neuron
+	activate     ActivationFunction
+}
+
+type Neuron struct {
+	Weights   []int
+	Threshold int
+}
+
+type ActivationFunction func(input []int, n Neuron) int
+
+func (n *Network) Run(input []int) ([]int, error) {
+	if len(input) != n.inputNeurons {
+		return nil, errors.New("input values does not match input neuron count")
+	}
+	var values = input
+	for _, layer := range n.layers {
+		values = n.calculateLayer(values, layer)
+	}
+	return values, nil
+}
+
+func (n *Network) calculateLayer(layerInput []int, layerNeurons []Neuron) []int {
+	result := make([]int, len(layerNeurons))
+	for lni, neuron := range layerNeurons {
+		result[lni] = n.activate(layerInput, neuron)
+	}
+	return result
+}
+
 type NeuralNetworkBuilder struct {
 	inputNeurons int
 	layers       [][]Neuron
+	activation   ActivationFunction
 }
 
 func NewNeuralNetworkBuilder(inputNeurons int) *NeuralNetworkBuilder {
 	return &NeuralNetworkBuilder{
 		inputNeurons: inputNeurons,
+		activation:   StepFunction,
 	}
 }
 
@@ -87,5 +92,10 @@ func (b *NeuralNetworkBuilder) Build() (*Network, error) {
 
 func (b *NeuralNetworkBuilder) WithLayer(neurons []Neuron) *NeuralNetworkBuilder {
 	b.layers = append(b.layers, neurons)
+	return b
+}
+
+func (b *NeuralNetworkBuilder) WithActivation(activation ActivationFunction) *NeuralNetworkBuilder {
+	b.activation = activation
 	return b
 }

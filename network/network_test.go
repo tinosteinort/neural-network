@@ -22,7 +22,8 @@ var _ = Describe("Network", func() {
 			Build()
 
 		Expect(err).To(BeNil())
-		Expect(n.Update([]int{1})).To(Equal(errors.New("input values does not match input neuron count")))
+		_, err = n.Run([]int{1})
+		Expect(err).To(Equal(errors.New("input values does not match input neuron count")))
 	})
 
 	It("should create new network", func() {
@@ -82,22 +83,25 @@ var _ = Describe("Network", func() {
 
 		Expect(err).To(BeNil())
 
-		Expect(n.Update([]int{0, 0})).To(BeNil())
-		Expect(n.Output(0)).To(Equal(0))
-		Expect(n.Output(1)).To(Equal(0))
-
-		Expect(n.Update([]int{1, 0})).To(BeNil())
-		Expect(n.Output(0)).To(Equal(0))
-		Expect(n.Output(1)).To(Equal(0))
-
-		err = n.Update([]int{0, 1})
+		r, err := n.Run([]int{0, 0})
 		Expect(err).To(BeNil())
-		Expect(n.Output(0)).To(Equal(0))
-		Expect(n.Output(1)).To(Equal(1))
+		Expect(r[0]).To(Equal(0))
+		Expect(r[1]).To(Equal(0))
 
-		Expect(n.Update([]int{1, 1})).To(BeNil())
-		Expect(n.Output(0)).To(Equal(1))
-		Expect(n.Output(1)).To(Equal(1))
+		r, err = n.Run([]int{1, 0})
+		Expect(err).To(BeNil())
+		Expect(r[0]).To(Equal(0))
+		Expect(r[1]).To(Equal(0))
+
+		r, err = n.Run([]int{0, 1})
+		Expect(err).To(BeNil())
+		Expect(r[0]).To(Equal(0))
+		Expect(r[1]).To(Equal(1))
+
+		r, err = n.Run([]int{1, 1})
+		Expect(err).To(BeNil())
+		Expect(r[0]).To(Equal(1))
+		Expect(r[1]).To(Equal(1))
 	})
 
 	Describe("NeuralNetworkBuilder", func() {

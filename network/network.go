@@ -15,38 +15,28 @@ type inputNeuron struct {
 }
 
 type layerNeuron struct {
-	value     int
 	threshold int
 	weights   []int
 }
 
-func (n *Network) Update(input []int) error {
+func (n *Network) Run(input []int) ([]int, error) {
 	if len(input) != len(n.input) {
-		return errors.New("input values does not match input neuron count")
+		return nil, errors.New("input values does not match input neuron count")
 	}
 
-	var layerInput = input
-	for li, layer := range n.layers {
-		if li > 0 {
-			layerInput = valuesOf(n.layers[li-1])
-		}
-		updateLayer(layerInput, layer)
+	var values = input
+	for _, layer := range n.layers {
+		values = calculateLayer(values, layer)
 	}
-	return nil
+	return values, nil
 }
 
-func valuesOf(l []layerNeuron) []int {
-	var result []int
-	for _, neuron := range l {
-		result = append(result, neuron.value)
+func calculateLayer(layerInput []int, layerNeurons []layerNeuron) []int {
+	result := make([]int, len(layerNeurons))
+	for lni, n := range layerNeurons {
+		result[lni] = activate(layerInput, n)
 	}
 	return result
-}
-
-func updateLayer(layerInput []int, layerNeurons []layerNeuron) {
-	for lni, n := range layerNeurons {
-		layerNeurons[lni].value = activate(layerInput, n)
-	}
 }
 
 func activate(layerInput []int, n layerNeuron) int {
@@ -59,10 +49,6 @@ func activate(layerInput []int, n layerNeuron) int {
 	} else {
 		return 1
 	}
-}
-
-func (n *Network) Output(i int) int {
-	return n.layers[len(n.layers)-1][i].value
 }
 
 type NeuralNetworkBuilder struct {

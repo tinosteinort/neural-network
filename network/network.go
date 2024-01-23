@@ -75,6 +75,7 @@ func (b *NeuralNetworkBuilder) Build() (*Network, error) {
 	return &Network{
 		inputNeurons: b.inputNeurons,
 		layers:       layers,
+		activate:     b.activation,
 	}, nil
 }
 

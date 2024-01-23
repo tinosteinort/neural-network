@@ -115,15 +115,13 @@ func (n *Network) Store(file string) error {
 		Activation:   n.activate.Name,
 		Layers:       layers,
 	}
-	println(fmt.Sprintf("yamlNetwork: %v", &yn))
 
-	data, err := yaml.Marshal(&yn)
-	println(fmt.Sprintf("yamlNetwork: %v", data))
+	f, err := os.Create(file)
 	if err != nil {
 		return err
 	}
 
-	f, err := os.Create(file)
+	data, err := yaml.Marshal(&yn)
 	if err != nil {
 		return err
 	}

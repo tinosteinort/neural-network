@@ -83,7 +83,7 @@ var _ = Describe("Network", func() {
 			}},
 		).Build()
 
-		Expect(err).To(BeNil())
+		Expect(err).NotTo(HaveOccurred())
 
 		r, err := n.Run([]int{0, 0})
 		Expect(err).To(BeNil())

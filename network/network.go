@@ -3,8 +3,6 @@ package network
 import (
 	"errors"
 	"fmt"
-	"gopkg.in/yaml.v3"
-	"os"
 )
 
 type Network struct {
@@ -94,56 +92,39 @@ func (b *NeuralNetworkBuilder) WithActivation(activation Activation) *NeuralNetw
 	return b
 }
 
-func (n *Network) Store(file string) error {
-
-	var layers []yamlLayer
+func (n *Network) Yaml() *YamlNetwork {
+	var layers []YamlLayer
 	for _, layer := range n.layers {
-		var yn []yamlNeuron
+		var yn []YamlNeuron
 		for _, neuron := range layer {
-			yn = append(yn, yamlNeuron{
+			yn = append(yn, YamlNeuron{
 				Threshold: neuron.Threshold,
 				Weights:   neuron.Weights,
 			})
 		}
-		layers = append(layers, yamlLayer{
+		layers = append(layers, YamlLayer{
 			Neurons: yn,
 		})
 	}
 
-	yn := yamlNetwork{
+	return &YamlNetwork{
 		InputNeurons: n.inputNeurons,
 		Activation:   n.activate.Name,
 		Layers:       layers,
 	}
-
-	f, err := os.Create(file)
-	if err != nil {
-		return err
-	}
-
-	data, err := yaml.Marshal(&yn)
-	if err != nil {
-		return err
-	}
-
-	if _, err := f.Write(data); err != nil {
-		return err
-	}
-
-	return nil
 }
 
-type yamlNetwork struct {
+type YamlNetwork struct {
 	InputNeurons int         `yaml:"input_neurons"`
 	Activation   string      `yaml:"activation"`
-	Layers       []yamlLayer `yaml:"layers"`
+	Layers       []YamlLayer `yaml:"layers"`
 }
 
-type yamlLayer struct {
-	Neurons []yamlNeuron `yaml:"neuron"`
+type YamlLayer struct {
+	Neurons []YamlNeuron `yaml:"neuron"`
 }
 
-type yamlNeuron struct {
+type YamlNeuron struct {
 	Threshold int   `yaml:"threshold"`
 	Weights   []int `yaml:"weights,flow"`
 }

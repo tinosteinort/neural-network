@@ -3,12 +3,14 @@ package network
 import (
 	"errors"
 	"fmt"
+	"gopkg.in/yaml.v3"
+	"os"
 )
 
 type Network struct {
 	inputNeurons int
 	layers       [][]Neuron
-	activate     ActivationFunction
+	activate     Activation
 }
 
 type Neuron struct {
@@ -16,7 +18,10 @@ type Neuron struct {
 	Threshold int
 }
 
-type ActivationFunction func(input []int, n Neuron) int
+type Activation struct {
+	Name     string
+	Function func(input []int, n Neuron) int
+}
 
 func (n *Network) Run(input []int) ([]int, error) {
 	if len(input) != n.inputNeurons {
@@ -32,7 +37,7 @@ func (n *Network) Run(input []int) ([]int, error) {
 func (n *Network) calculateLayer(layerInput []int, layerNeurons []Neuron) []int {
 	result := make([]int, len(layerNeurons))
 	for lni, neuron := range layerNeurons {
-		result[lni] = n.activate(layerInput, neuron)
+		result[lni] = n.activate.Function(layerInput, neuron)
 	}
 	return result
 }
@@ -40,10 +45,10 @@ func (n *Network) calculateLayer(layerInput []int, layerNeurons []Neuron) []int 
 type NeuralNetworkBuilder struct {
 	inputNeurons int
 	layers       [][]Neuron
-	activation   ActivationFunction
+	activation   Activation
 }
 
-func NewNeuralNetworkBuilder(inputNeurons int, activation ActivationFunction) *NeuralNetworkBuilder {
+func NewNeuralNetworkBuilder(inputNeurons int, activation Activation) *NeuralNetworkBuilder {
 	return &NeuralNetworkBuilder{
 		inputNeurons: inputNeurons,
 		activation:   activation,
@@ -84,7 +89,63 @@ func (b *NeuralNetworkBuilder) WithLayer(neurons []Neuron) *NeuralNetworkBuilder
 	return b
 }
 
-func (b *NeuralNetworkBuilder) WithActivation(activation ActivationFunction) *NeuralNetworkBuilder {
+func (b *NeuralNetworkBuilder) WithActivation(activation Activation) *NeuralNetworkBuilder {
 	b.activation = activation
 	return b
+}
+
+func (n *Network) Store(file string) error {
+
+	var layers []yamlLayer
+	for _, layer := range n.layers {
+		var yn []yamlNeuron
+		for _, neuron := range layer {
+			yn = append(yn, yamlNeuron{
+				Threshold: neuron.Threshold,
+				Weights:   neuron.Weights,
+			})
+		}
+		layers = append(layers, yamlLayer{
+			Neurons: yn,
+		})
+	}
+
+	yn := yamlNetwork{
+		InputNeurons: n.inputNeurons,
+		Activation:   n.activate.Name,
+		Layers:       layers,
+	}
+	println(fmt.Sprintf("yamlNetwork: %v", &yn))
+
+	data, err := yaml.Marshal(&yn)
+	println(fmt.Sprintf("yamlNetwork: %v", data))
+	if err != nil {
+		return err
+	}
+
+	f, err := os.Create(file)
+	if err != nil {
+		return err
+	}
+
+	if _, err := f.Write(data); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+type yamlNetwork struct {
+	InputNeurons int         `yaml:"input_neurons"`
+	Activation   string      `yaml:"activation"`
+	Layers       []yamlLayer `yaml:"layers"`
+}
+
+type yamlLayer struct {
+	Neurons []yamlNeuron `yaml:"neuron"`
+}
+
+type yamlNeuron struct {
+	Threshold int   `yaml:"threshold"`
+	Weights   []int `yaml:"weights,flow"`
 }

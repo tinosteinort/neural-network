@@ -57,7 +57,7 @@ var _ = Describe("Network", func() {
 		Expect(err).To(Equal(errors.New("input values does not match input neuron count")))
 	})
 
-	It("update network", func() {
+	FIt("update network", func() {
 
 		n, err := network.NewNeuralNetworkBuilder(
 			2,
@@ -155,5 +155,35 @@ var _ = Describe("Network", func() {
 
 			Expect(err).To(Equal(errors.New("weight count does not match previous layer[0] neuron count")))
 		})
+	})
+
+	Describe("store and restore network", func() {
+
+		n, err := network.NewNeuralNetworkBuilder(
+			2,
+			activation.StepFunction,
+		).WithLayer(
+			[]network.Neuron{{
+				Weights:   []int{0, 1},
+				Threshold: 1,
+			}, {
+				Weights:   []int{1, 1},
+				Threshold: 2,
+			}, {
+				Weights:   []int{1, 0},
+				Threshold: 0,
+			}},
+		).WithLayer(
+			[]network.Neuron{{
+				Weights:   []int{0, 1, 0},
+				Threshold: 1,
+			}, {
+				Weights:   []int{1, 0, 1},
+				Threshold: 2,
+			}},
+		).Build()
+
+		Expect(err).NotTo(HaveOccurred())
+		Expect(n.Store("test.nn")).NotTo(HaveOccurred())
 	})
 })

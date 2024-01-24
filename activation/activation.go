@@ -5,7 +5,7 @@ import (
 	"github.com/tinosteionrt/neural-network/network"
 )
 
-var functions = []network.Activation{
+var builtin = []network.Activation{
 	{
 		Name: "step",
 		Run: func(input []int, n network.Neuron) int {
@@ -22,11 +22,17 @@ var functions = []network.Activation{
 	},
 }
 
+var custom []network.Activation
+
 func ByName(n string) (network.Activation, error) {
-	for _, f := range functions {
+	for _, f := range builtin {
 		if f.Name == n {
 			return f, nil
 		}
 	}
 	return network.Activation{}, fmt.Errorf("activation function %s not found", n)
+}
+
+func WithCustom(functions []network.Activation) {
+	custom = functions
 }

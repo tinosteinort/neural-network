@@ -32,7 +32,7 @@ func (n *Network) CreateSnapshot() *Snapshot {
 
 	return &Snapshot{
 		InputNeurons: n.inputNeurons,
-		Activation:   n.activate.Name,
+		Activation:   n.activation.Name,
 		Layers:       layers,
 	}
 }

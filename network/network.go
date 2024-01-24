@@ -8,7 +8,7 @@ import (
 type Network struct {
 	inputNeurons int
 	layers       [][]Neuron
-	activate     Activation
+	activation   Activation
 }
 
 type Neuron struct {
@@ -17,8 +17,8 @@ type Neuron struct {
 }
 
 type Activation struct {
-	Name     string
-	Function func(input []int, n Neuron) int
+	Name string
+	Run  func(input []int, n Neuron) int
 }
 
 func (n *Network) Run(input []int) ([]int, error) {
@@ -35,7 +35,7 @@ func (n *Network) Run(input []int) ([]int, error) {
 func (n *Network) calculateLayer(layerInput []int, layerNeurons []Neuron) []int {
 	result := make([]int, len(layerNeurons))
 	for lni, neuron := range layerNeurons {
-		result[lni] = n.activate.Function(layerInput, neuron)
+		result[lni] = n.activation.Run(layerInput, neuron)
 	}
 	return result
 }
@@ -78,7 +78,7 @@ func (b *NeuralNetworkBuilder) Build() (*Network, error) {
 	return &Network{
 		inputNeurons: b.inputNeurons,
 		layers:       layers,
-		activate:     b.activation,
+		activation:   b.activation,
 	}, nil
 }
 

@@ -8,7 +8,7 @@ import (
 var functions = []network.Activation{
 	{
 		Name: "step",
-		Function: func(input []int, n network.Neuron) int {
+		Run: func(input []int, n network.Neuron) int {
 			value := 0
 			for wi, w := range n.Weights {
 				value = value + (input[wi] * w)

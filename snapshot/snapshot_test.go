@@ -1,16 +1,16 @@
-package dump_test
+package snapshot_test
 
 import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/tinosteionrt/neural-network/activation"
-	"github.com/tinosteionrt/neural-network/dump"
 	"github.com/tinosteionrt/neural-network/network"
+	"github.com/tinosteionrt/neural-network/snapshot"
 )
 
-var _ = Describe("Dump", func() {
+var _ = Describe("Snapshot", func() {
 
-	It("store and restore network", func() {
+	It("should store network", func() {
 
 		n, err := network.NewNeuralNetworkBuilder(
 			2,
@@ -37,6 +37,6 @@ var _ = Describe("Dump", func() {
 		).Build()
 
 		Expect(err).NotTo(HaveOccurred())
-		Expect(dump.Store(n, "test.nn")).NotTo(HaveOccurred())
+		Expect(snapshot.Store(n, "test.nn")).NotTo(HaveOccurred())
 	})
 })

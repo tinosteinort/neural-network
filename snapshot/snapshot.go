@@ -1,4 +1,4 @@
-package dump
+package snapshot
 
 import (
 	"github.com/tinosteionrt/neural-network/network"
@@ -12,8 +12,9 @@ func Store(n *network.Network, file string) error {
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 
-	data, err := yaml.Marshal(n.Yaml())
+	data, err := yaml.Marshal(n.CreateSnapshot())
 	if err != nil {
 		return err
 	}

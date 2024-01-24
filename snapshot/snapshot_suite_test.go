@@ -1,4 +1,4 @@
-package dump_test
+package snapshot_test
 
 import (
 	"testing"
@@ -9,5 +9,5 @@ import (
 
 func TestDump(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Dump Suite")
+	RunSpecs(t, "Snapshot Suite")
 }

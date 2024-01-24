@@ -68,7 +68,7 @@ func (b *NeuralNetworkBuilder) Build() (*Network, error) {
 			} else {
 				previousLayer := b.layers[layerIndex-1]
 				if len(neuron.Weights) != len(previousLayer) {
-					return nil, errors.New(fmt.Sprintf("weight count does not match previous layer[%d] neuron count", layerIndex-1))
+					return nil, fmt.Errorf("weight count does not match previous layer[%d] neuron count", layerIndex-1)
 				}
 			}
 		}

@@ -57,7 +57,7 @@ var _ = Describe("Network", func() {
 		Expect(err).To(Equal(errors.New("input values does not match input neuron count")))
 	})
 
-	FIt("update network", func() {
+	It("update network", func() {
 
 		n, err := network.NewNeuralNetworkBuilder(
 			2,

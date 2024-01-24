@@ -46,4 +46,46 @@ var _ = Describe("Snapshot", func() {
 		Expect(err).NotTo(HaveOccurred())
 		Expect(string(snapshot1)).To(Equal(string(expected)))
 	})
+
+	It("should restore network", func() {
+
+		n, err := snapshot.Restore("example1.nn")
+		Expect(n).NotTo(BeNil())
+		Expect(err).NotTo(HaveOccurred())
+
+		expected := network.Snapshot{
+			InputNeurons: 3,
+			Activation:   "step",
+			Layers: []network.SnapshotLayer{
+				{
+					Neurons: []network.SnapshotNeuron{
+						{
+							Threshold: 1,
+							Weights:   []int{0, 1, 1},
+						}, {
+							Threshold: 2,
+							Weights:   []int{1, 1, 0},
+						}, {
+							Threshold: 3,
+							Weights:   []int{1, 0, 0},
+						}, {
+							Threshold: 3,
+							Weights:   []int{0, 0, 1},
+						},
+					},
+				}, {
+					Neurons: []network.SnapshotNeuron{
+						{
+							Threshold: 1,
+							Weights:   []int{0, 1, 0, 1},
+						}, {
+							Threshold: 2,
+							Weights:   []int{1, 0, 1, 0},
+						},
+					},
+				},
+			},
+		}
+		Expect(n.CreateSnapshot()).To(Equal(&expected))
+	})
 })

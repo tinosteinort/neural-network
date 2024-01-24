@@ -12,4 +12,4 @@ layers:
         - threshold: 1
           weights: [0, 1, 0]
         - threshold: 2
-          weights: [1, 0, ]
+          weights: [1, 0, 1]

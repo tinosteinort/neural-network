@@ -16,3 +16,7 @@ var StepFunction = network.Activation{
 		}
 	},
 }
+
+func ByName(n string) network.Activation {
+	return StepFunction
+}

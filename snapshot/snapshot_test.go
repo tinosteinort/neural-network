@@ -13,9 +13,12 @@ var _ = Describe("Snapshot", func() {
 
 	It("should store network", func() {
 
+		af, err := activation.ByName("step")
+		Expect(err).NotTo(HaveOccurred())
+
 		n, err := network.NewNeuralNetworkBuilder(
 			2,
-			activation.StepFunction,
+			af,
 		).WithLayer(
 			[]network.Neuron{{
 				Weights:   []int{0, 1},

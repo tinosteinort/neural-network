@@ -33,9 +33,14 @@ func Restore(file string) (*network.Network, error) {
 		return nil, err
 	}
 
+	af, err := activation.ByName(s.Activation)
+	if err != nil {
+		return nil, err
+	}
+
 	b := network.NewNeuralNetworkBuilder(
 		s.InputNeurons,
-		activation.ByName(s.Activation),
+		af,
 	)
 
 	for _, sl := range s.Layers {

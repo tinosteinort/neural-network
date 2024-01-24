@@ -1,4 +1,4 @@
-package snapshot_test
+package test_test
 
 import (
 	. "github.com/onsi/ginkgo/v2"

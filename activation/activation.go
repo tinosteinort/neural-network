@@ -5,24 +5,30 @@ import (
 	"github.com/tinosteionrt/neural-network/network"
 )
 
-var builtin = []network.Activation{
-	{
-		Name: "step",
-		Run: func(input []int, n network.Neuron) int {
-			value := 0
-			for wi, w := range n.Weights {
-				value = value + (input[wi] * w)
-			}
-			if value-n.Threshold < 0 {
-				return 0
-			} else {
-				return 1
-			}
-		},
+var StepFunction = network.Activation{
+	Name: "step",
+	Run: func(input []int, n network.Neuron) int {
+		value := 0
+		for wi, w := range n.Weights {
+			value = value + (input[wi] * w)
+		}
+		if value-n.Threshold < 0 {
+			return 0
+		} else {
+			return 1
+		}
 	},
 }
 
+func WithCustom(functions []network.Activation) {
+	custom = functions
+}
+
 var custom []network.Activation
+
+var builtin = []network.Activation{
+	StepFunction,
+}
 
 func ByName(n string) (network.Activation, error) {
 	for _, f := range builtin {
@@ -31,8 +37,4 @@ func ByName(n string) (network.Activation, error) {
 		}
 	}
 	return network.Activation{}, fmt.Errorf("activation function %s not found", n)
-}
-
-func WithCustom(functions []network.Activation) {
-	custom = functions
 }

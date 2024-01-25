@@ -10,19 +10,11 @@ import (
 
 var _ = Describe("Network", func() {
 
-	var stepFunction network.Activation
-
-	BeforeEach(func() {
-		var err error
-		stepFunction, err = activation.ByName("step")
-		Expect(err).NotTo(HaveOccurred())
-	})
-
 	It("should create new network", func() {
 
 		_, err := network.NewNeuralNetworkBuilder(
 			2,
-			stepFunction,
+			activation.StepFunction,
 		).WithLayer(
 			[]network.Neuron{{
 				Weights:   []int{0, 1},
@@ -52,7 +44,7 @@ var _ = Describe("Network", func() {
 		// https://www.taralino.de/courses/neuralnetwork1/network
 		n, err := network.NewNeuralNetworkBuilder(
 			2,
-			stepFunction,
+			activation.StepFunction,
 		).WithLayer(
 			[]network.Neuron{{
 				Weights:   []int{0, 1},
@@ -69,7 +61,7 @@ var _ = Describe("Network", func() {
 
 		n, err := network.NewNeuralNetworkBuilder(
 			2,
-			stepFunction,
+			activation.StepFunction,
 		).WithLayer(
 			[]network.Neuron{{
 				Weights:   []int{0, 1},
@@ -120,7 +112,7 @@ var _ = Describe("Network", func() {
 
 			_, err := network.NewNeuralNetworkBuilder(
 				2,
-				stepFunction,
+				activation.StepFunction,
 			).Build()
 
 			Expect(err).To(Equal(errors.New("no layer defined")))
@@ -130,7 +122,7 @@ var _ = Describe("Network", func() {
 
 			_, err := network.NewNeuralNetworkBuilder(
 				2,
-				stepFunction,
+				activation.StepFunction,
 			).WithLayer(
 				[]network.Neuron{{
 					Weights: []int{0},
@@ -144,7 +136,7 @@ var _ = Describe("Network", func() {
 
 			_, err := network.NewNeuralNetworkBuilder(
 				2,
-				stepFunction,
+				activation.StepFunction,
 			).WithLayer(
 				[]network.Neuron{{
 					Weights: []int{0, 0},

@@ -38,7 +38,7 @@ func Restore(file string) (*network.Network, error) {
 		return nil, err
 	}
 
-	b := network.NewNeuralNetworkBuilder(
+	b := network.NewBuilder(
 		s.InputNeurons,
 		af,
 	)

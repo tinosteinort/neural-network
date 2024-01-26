@@ -12,7 +12,7 @@ var _ = Describe("Network", func() {
 
 	It("should create new network", func() {
 
-		_, err := network.NewNeuralNetworkBuilder(
+		_, err := network.NewBuilder(
 			2,
 			activation.StepFunction,
 		).WithLayer(
@@ -42,7 +42,7 @@ var _ = Describe("Network", func() {
 	It("should not create new network because of invalid number of input neurons", func() {
 
 		// https://www.taralino.de/courses/neuralnetwork1/network
-		n, err := network.NewNeuralNetworkBuilder(
+		n, err := network.NewBuilder(
 			2,
 			activation.StepFunction,
 		).WithLayer(
@@ -59,7 +59,7 @@ var _ = Describe("Network", func() {
 
 	It("update network", func() {
 
-		n, err := network.NewNeuralNetworkBuilder(
+		n, err := network.NewBuilder(
 			2,
 			activation.StepFunction,
 		).WithLayer(
@@ -106,11 +106,11 @@ var _ = Describe("Network", func() {
 		Expect(r[1]).To(Equal(1))
 	})
 
-	Describe("NeuralNetworkBuilder", func() {
+	Describe("Builder", func() {
 
 		It("needs at least one layer", func() {
 
-			_, err := network.NewNeuralNetworkBuilder(
+			_, err := network.NewBuilder(
 				2,
 				activation.StepFunction,
 			).Build()
@@ -120,7 +120,7 @@ var _ = Describe("Network", func() {
 
 		It("weight-count need to match amount input neurons", func() {
 
-			_, err := network.NewNeuralNetworkBuilder(
+			_, err := network.NewBuilder(
 				2,
 				activation.StepFunction,
 			).WithLayer(
@@ -134,7 +134,7 @@ var _ = Describe("Network", func() {
 
 		It("weight-count need to match amount of previous layers neurons", func() {
 
-			_, err := network.NewNeuralNetworkBuilder(
+			_, err := network.NewBuilder(
 				2,
 				activation.StepFunction,
 			).WithLayer(

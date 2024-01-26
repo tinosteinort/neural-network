@@ -40,20 +40,20 @@ func (n *Network) calculateLayer(layerInput []int, layerNeurons []Neuron) []int 
 	return result
 }
 
-type NeuralNetworkBuilder struct {
+type Builder struct {
 	inputNeurons int
 	layers       [][]Neuron
 	activation   Activation
 }
 
-func NewNeuralNetworkBuilder(inputNeurons int, activation Activation) *NeuralNetworkBuilder {
-	return &NeuralNetworkBuilder{
+func NewBuilder(inputNeurons int, activation Activation) *Builder {
+	return &Builder{
 		inputNeurons: inputNeurons,
 		activation:   activation,
 	}
 }
 
-func (b *NeuralNetworkBuilder) Build() (*Network, error) {
+func (b *Builder) Build() (*Network, error) {
 	if len(b.layers) == 0 {
 		return nil, errors.New("no layer defined")
 	}
@@ -82,12 +82,12 @@ func (b *NeuralNetworkBuilder) Build() (*Network, error) {
 	}, nil
 }
 
-func (b *NeuralNetworkBuilder) WithLayer(neurons []Neuron) *NeuralNetworkBuilder {
+func (b *Builder) WithLayer(neurons []Neuron) *Builder {
 	b.layers = append(b.layers, neurons)
 	return b
 }
 
-func (b *NeuralNetworkBuilder) WithActivation(activation Activation) *NeuralNetworkBuilder {
+func (b *Builder) WithActivation(activation Activation) *Builder {
 	b.activation = activation
 	return b
 }

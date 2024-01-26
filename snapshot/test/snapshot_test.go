@@ -13,7 +13,7 @@ var _ = Describe("Snapshot", func() {
 
 	It("should store network", func() {
 
-		n, err := network.NewNeuralNetworkBuilder(
+		n, err := network.NewBuilder(
 			2,
 			activation.StepFunction,
 		).WithLayer(

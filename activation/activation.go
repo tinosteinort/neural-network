@@ -22,7 +22,7 @@ var SigmoidFunction = network.Activation{
 	Name: "sigmoid",
 	Run: func(input []float64, n network.Neuron) float64 {
 		var t = calculateValue(input, n)
-		return 1 / (1 * math.Exp2(-t))
+		return 1 / (1 * math.Exp(-t))
 	},
 }
 

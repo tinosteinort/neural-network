@@ -12,16 +12,16 @@ type Network struct {
 }
 
 type Neuron struct {
-	Weights   []int
-	Threshold int
+	Weights   []float64
+	Threshold float64
 }
 
 type Activation struct {
 	Name string
-	Run  func(input []int, n Neuron) int
+	Run  func(input []float64, n Neuron) float64
 }
 
-func (n *Network) Run(input []int) ([]int, error) {
+func (n *Network) Run(input []float64) ([]float64, error) {
 	if len(input) != n.inputNeurons {
 		return nil, errors.New("input values does not match input neuron count")
 	}
@@ -32,8 +32,8 @@ func (n *Network) Run(input []int) ([]int, error) {
 	return values, nil
 }
 
-func (n *Network) calculateLayer(layerInput []int, layerNeurons []Neuron) []int {
-	result := make([]int, len(layerNeurons))
+func (n *Network) calculateLayer(layerInput []float64, layerNeurons []Neuron) []float64 {
+	result := make([]float64, len(layerNeurons))
 	for lni, neuron := range layerNeurons {
 		result[lni] = n.activation.Run(layerInput, neuron)
 	}

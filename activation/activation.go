@@ -7,8 +7,8 @@ import (
 
 var StepFunction = network.Activation{
 	Name: "step",
-	Run: func(input []int, n network.Neuron) int {
-		value := 0
+	Run: func(input []float64, n network.Neuron) float64 {
+		var value float64 = 0
 		for wi, w := range n.Weights {
 			value = value + (input[wi] * w)
 		}

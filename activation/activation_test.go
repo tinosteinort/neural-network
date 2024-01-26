@@ -31,7 +31,7 @@ var _ = Describe("Activation", func() {
 		Expect(activation.WithCustom([]network.Activation{
 			{
 				Name: "custom-implementation",
-				Run: func(input []int, n network.Neuron) int {
+				Run: func(input []float64, n network.Neuron) float64 {
 					return 0
 				},
 			},
@@ -47,7 +47,7 @@ var _ = Describe("Activation", func() {
 		err := activation.WithCustom([]network.Activation{
 			{
 				Name: "step",
-				Run: func(input []int, n network.Neuron) int {
+				Run: func(input []float64, n network.Neuron) float64 {
 					return 0
 				},
 			},

@@ -11,8 +11,8 @@ type SnapshotLayer struct {
 }
 
 type SnapshotNeuron struct {
-	Threshold int   `yaml:"threshold"`
-	Weights   []int `yaml:"weights,flow"`
+	Threshold float64   `yaml:"threshold"`
+	Weights   []float64 `yaml:"weights,flow"`
 }
 
 func (n *Network) CreateSnapshot() *Snapshot {

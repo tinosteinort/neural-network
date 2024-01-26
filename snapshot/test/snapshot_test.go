@@ -18,22 +18,22 @@ var _ = Describe("Snapshot", func() {
 			activation.StepFunction,
 		).WithLayer(
 			[]network.Neuron{{
-				Weights:   []int{0, 1},
-				Threshold: 1,
+				Weights:   []float64{0.0, 1.0},
+				Threshold: 1.0,
 			}, {
-				Weights:   []int{1, 1},
-				Threshold: 2,
+				Weights:   []float64{1.0, 1.0},
+				Threshold: 2.0,
 			}, {
-				Weights:   []int{1, 0},
-				Threshold: 0,
+				Weights:   []float64{1.0, 0.0},
+				Threshold: 0.0,
 			}},
 		).WithLayer(
 			[]network.Neuron{{
-				Weights:   []int{0, 1, 0},
-				Threshold: 1,
+				Weights:   []float64{0.0, 1.0, 0.0},
+				Threshold: 1.0,
 			}, {
-				Weights:   []int{1, 0, 1},
-				Threshold: 2,
+				Weights:   []float64{1.0, 0.0, 1.0},
+				Threshold: 2.0,
 			}},
 		).Build()
 
@@ -60,27 +60,27 @@ var _ = Describe("Snapshot", func() {
 				{
 					Neurons: []network.SnapshotNeuron{
 						{
-							Threshold: 1,
-							Weights:   []int{0, 1, 1},
+							Threshold: 1.0,
+							Weights:   []float64{0.0, 1.0, 1.0},
 						}, {
-							Threshold: 2,
-							Weights:   []int{1, 1, 0},
+							Threshold: 2.0,
+							Weights:   []float64{1.0, 1.0, 0.0},
 						}, {
-							Threshold: 3,
-							Weights:   []int{1, 0, 0},
+							Threshold: 3.0,
+							Weights:   []float64{1.0, 0.0, 0.0},
 						}, {
-							Threshold: 3,
-							Weights:   []int{0, 0, 1},
+							Threshold: 3.0,
+							Weights:   []float64{0.0, 0.0, 1.0},
 						},
 					},
 				}, {
 					Neurons: []network.SnapshotNeuron{
 						{
-							Threshold: 1,
-							Weights:   []int{0, 1, 0, 1},
+							Threshold: 1.0,
+							Weights:   []float64{0.0, 1.0, 0.0, 1.0},
 						}, {
-							Threshold: 2,
-							Weights:   []int{1, 0, 1, 0},
+							Threshold: 2.0,
+							Weights:   []float64{1.0, 0.0, 1.0, 0.0},
 						},
 					},
 				},

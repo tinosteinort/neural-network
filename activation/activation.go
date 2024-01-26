@@ -20,8 +20,16 @@ var StepFunction = network.Activation{
 	},
 }
 
-func WithCustom(functions []network.Activation) {
+func WithCustom(functions []network.Activation) error {
+	for _, cf := range functions {
+		for _, bf := range builtin {
+			if cf.Name == bf.Name {
+				return fmt.Errorf("cannot override builtin function: %s", bf.Name)
+			}
+		}
+	}
 	custom = functions
+	return nil
 }
 
 var custom []network.Activation
@@ -36,5 +44,10 @@ func ByName(n string) (network.Activation, error) {
 			return f, nil
 		}
 	}
-	return network.Activation{}, fmt.Errorf("activation function %s not found", n)
+	for _, f := range custom {
+		if f.Name == n {
+			return f, nil
+		}
+	}
+	return network.Activation{}, fmt.Errorf("activation function not found: %s", n)
 }

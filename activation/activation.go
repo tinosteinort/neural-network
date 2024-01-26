@@ -9,7 +9,7 @@ import (
 var StepFunction = network.Activation{
 	Name: "step",
 	Run: func(input []float64, n network.Neuron) float64 {
-		var t = calculateValue(input, n) - n.Threshold
+		var t = calculateValue(input, n)
 		if t < 0 {
 			return 0.0
 		} else {
@@ -21,8 +21,8 @@ var StepFunction = network.Activation{
 var SigmoidFunction = network.Activation{
 	Name: "sigmoid",
 	Run: func(input []float64, n network.Neuron) float64 {
-		var t = calculateValue(input, n) - n.Threshold
-		return 1 / (1 * math.Exp(-t))
+		var t = calculateValue(input, n)
+		return 1 / (1 * math.Exp2(-t))
 	},
 }
 
@@ -31,7 +31,7 @@ func calculateValue(input []float64, n network.Neuron) float64 {
 	for wi, w := range n.Weights {
 		value = value + (input[wi] * w)
 	}
-	return value
+	return value - n.Threshold
 }
 
 func WithCustom(functions []network.Activation) error {

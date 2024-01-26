@@ -3,21 +3,35 @@ package activation
 import (
 	"fmt"
 	"github.com/tinosteionrt/neural-network/network"
+	"math"
 )
 
 var StepFunction = network.Activation{
 	Name: "step",
 	Run: func(input []float64, n network.Neuron) float64 {
-		var value float64 = 0
-		for wi, w := range n.Weights {
-			value = value + (input[wi] * w)
-		}
-		if value-n.Threshold < 0 {
-			return 0
+		var t = calculateValue(input, n) - n.Threshold
+		if t < 0 {
+			return 0.0
 		} else {
-			return 1
+			return 1.0
 		}
 	},
+}
+
+var SigmoidFunction = network.Activation{
+	Name: "sigmoid",
+	Run: func(input []float64, n network.Neuron) float64 {
+		var t = calculateValue(input, n) - n.Threshold
+		return 1 / (1 * math.Exp(-t))
+	},
+}
+
+func calculateValue(input []float64, n network.Neuron) float64 {
+	var value float64 = 0
+	for wi, w := range n.Weights {
+		value = value + (input[wi] * w)
+	}
+	return value
 }
 
 func WithCustom(functions []network.Activation) error {
@@ -36,6 +50,7 @@ var custom []network.Activation
 
 var builtin = []network.Activation{
 	StepFunction,
+	SigmoidFunction,
 }
 
 func ByName(n string) (network.Activation, error) {

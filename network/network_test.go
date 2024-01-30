@@ -166,9 +166,8 @@ var _ = Describe("Network", func() {
 
 			_, err := network.NewBuilder(
 				activation.StepFunction,
-			).WithInput([]network.Input{
-				{Value: 1.0},
-				{Value: 2.0},
+			).WithInput([]float64{
+				1.0, 2.0,
 			},
 			).WithLayer(
 				[]network.Neuron{{

@@ -15,9 +15,8 @@ var _ = Describe("Snapshot", func() {
 
 		n, err := network.NewBuilder(
 			activation.StepFunction,
-		).WithInput([]network.Input{
-			{Value: 1.0},
-			{Value: 2.0},
+		).WithInput([]float64{
+			1.0, 2.0,
 		}).WithLayer(
 			[]network.Neuron{{
 				Weights:   []float64{0.0, 1.0},
@@ -62,10 +61,8 @@ var _ = Describe("Snapshot", func() {
 
 		expected := network.Snapshot{
 			Activation: "step",
-			Input: []network.SnapshotInput{
-				{Value: 1.0},
-				{Value: 2.0},
-				{Value: 3.0},
+			Input: []float64{
+				1.0, 2.0, 3.0,
 			},
 			Layers: []network.SnapshotLayer{
 				{

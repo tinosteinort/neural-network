@@ -1,7 +1,5 @@
 activation: step
-input:
-    - value: 1
-    - value: 2
+input: [1, 2]
 layers:
     - neuron:
         - threshold: 1

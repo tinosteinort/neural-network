@@ -6,7 +6,7 @@ import (
 )
 
 type Network struct {
-	input      []Input
+	input      []float64
 	layers     [][]Neuron
 	activation Activation
 }
@@ -15,10 +15,6 @@ type Neuron struct {
 	Weights   []float64
 	Threshold float64
 	Value     float64
-}
-
-type Input struct {
-	Value float64
 }
 
 type Activation struct {
@@ -49,7 +45,7 @@ func (n *Network) calculateLayer(layerInput []float64, layerNeurons []Neuron) []
 }
 
 type Builder struct {
-	input      []Input
+	input      []float64
 	layers     [][]Neuron
 	activation Activation
 }
@@ -94,11 +90,11 @@ func (b *Builder) Build() (*Network, error) {
 }
 
 func (b *Builder) WithInputNeurons(inputNeurons int) *Builder {
-	b.input = make([]Input, inputNeurons)
+	b.input = make([]float64, inputNeurons)
 	return b
 }
 
-func (b *Builder) WithInput(input []Input) *Builder {
+func (b *Builder) WithInput(input []float64) *Builder {
 	b.input = input
 	return b
 }

@@ -2,7 +2,7 @@ package network
 
 type Snapshot struct {
 	Activation string          `yaml:"activation"`
-	Input      []SnapshotInput `yaml:"input"`
+	Input      []float64       `yaml:"input,flow"`
 	Layers     []SnapshotLayer `yaml:"layers"`
 }
 
@@ -16,18 +16,7 @@ type SnapshotNeuron struct {
 	Value     float64   `yaml:"value"`
 }
 
-type SnapshotInput struct {
-	Value float64 `yaml:"value"`
-}
-
 func (n *Network) CreateSnapshot() *Snapshot {
-	var input []SnapshotInput
-	for _, i := range n.input {
-		input = append(input, SnapshotInput{
-			Value: i.Value,
-		})
-	}
-
 	var layers []SnapshotLayer
 	for _, layer := range n.layers {
 		var yn []SnapshotNeuron
@@ -44,7 +33,7 @@ func (n *Network) CreateSnapshot() *Snapshot {
 	}
 
 	return &Snapshot{
-		Input:      input,
+		Input:      n.input,
 		Activation: n.activation.Name,
 		Layers:     layers,
 	}

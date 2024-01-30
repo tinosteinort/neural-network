@@ -42,23 +42,13 @@ func Restore(file string) (*network.Network, error) {
 		af,
 	)
 
-	b.WithInput(restoreInput(s.Input))
+	b.WithInput(s.Input)
 
 	for _, sl := range s.Layers {
 		b.WithLayer(restoreLayer(sl))
 	}
 
 	return b.Build()
-}
-
-func restoreInput(sni []network.SnapshotInput) []network.Input {
-	var input []network.Input
-	for _, i := range sni {
-		input = append(input, network.Input{
-			Value: i.Value,
-		})
-	}
-	return input
 }
 
 func restoreLayer(l network.SnapshotLayer) []network.Neuron {

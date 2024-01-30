@@ -39,22 +39,38 @@ func Restore(file string) (*network.Network, error) {
 	}
 
 	b := network.NewBuilder(
-		s.InputNeurons,
 		af,
 	)
 
+	b.WithInput(restoreInput(s.Input))
+
 	for _, sl := range s.Layers {
-		var neurons []network.Neuron
-		for _, sn := range sl.Neurons {
-			neurons = append(neurons, network.Neuron{
-				Threshold: sn.Threshold,
-				Weights:   sn.Weights,
-			})
-		}
-		b.WithLayer(neurons)
+		b.WithLayer(restoreLayer(sl))
 	}
 
 	return b.Build()
+}
+
+func restoreInput(sni []network.SnapshotInput) []network.Input {
+	var input []network.Input
+	for _, i := range sni {
+		input = append(input, network.Input{
+			Value: i.Value,
+		})
+	}
+	return input
+}
+
+func restoreLayer(l network.SnapshotLayer) []network.Neuron {
+	var neurons []network.Neuron
+	for _, n := range l.Neurons {
+		neurons = append(neurons, network.Neuron{
+			Threshold: n.Threshold,
+			Weights:   n.Weights,
+			Value:     n.Value,
+		})
+	}
+	return neurons
 }
 
 func readYaml(file string) (*network.Snapshot, error) {

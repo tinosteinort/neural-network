@@ -14,26 +14,33 @@ var _ = Describe("Snapshot", func() {
 	It("should store network", func() {
 
 		n, err := network.NewBuilder(
-			2,
 			activation.StepFunction,
-		).WithLayer(
+		).WithInput([]network.Input{
+			{Value: 1.0},
+			{Value: 2.0},
+		}).WithLayer(
 			[]network.Neuron{{
 				Weights:   []float64{0.0, 1.0},
 				Threshold: 1.0,
+				Value:     50.0,
 			}, {
 				Weights:   []float64{1.0, 1.0},
 				Threshold: 2.0,
+				Value:     60.0,
 			}, {
 				Weights:   []float64{1.0, 0.0},
 				Threshold: 0.0,
+				Value:     70.0,
 			}},
 		).WithLayer(
 			[]network.Neuron{{
 				Weights:   []float64{0.0, 1.0, 0.0},
 				Threshold: 1.0,
+				Value:     80.0,
 			}, {
 				Weights:   []float64{1.0, 0.0, 1.0},
 				Threshold: 2.0,
+				Value:     90.0,
 			}},
 		).Build()
 
@@ -50,27 +57,35 @@ var _ = Describe("Snapshot", func() {
 	It("should restore network", func() {
 
 		n, err := snapshot.Restore("example1.nn")
-		Expect(n).NotTo(BeNil())
 		Expect(err).NotTo(HaveOccurred())
+		Expect(n).NotTo(BeNil())
 
 		expected := network.Snapshot{
-			InputNeurons: 3,
-			Activation:   "step",
+			Activation: "step",
+			Input: []network.SnapshotInput{
+				{Value: 1.0},
+				{Value: 2.0},
+				{Value: 3.0},
+			},
 			Layers: []network.SnapshotLayer{
 				{
 					Neurons: []network.SnapshotNeuron{
 						{
 							Threshold: 1.0,
 							Weights:   []float64{0.0, 1.0, 1.0},
+							Value:     0.5,
 						}, {
 							Threshold: 2.0,
 							Weights:   []float64{1.0, 1.0, 0.0},
+							Value:     0.6,
 						}, {
 							Threshold: 3.0,
 							Weights:   []float64{1.0, 0.0, 0.0},
+							Value:     0.7,
 						}, {
 							Threshold: 3.0,
 							Weights:   []float64{0.0, 0.0, 1.0},
+							Value:     0.8,
 						},
 					},
 				}, {
@@ -78,9 +93,11 @@ var _ = Describe("Snapshot", func() {
 						{
 							Threshold: 1.0,
 							Weights:   []float64{0.0, 1.0, 0.0, 1.0},
+							Value:     0.9,
 						}, {
 							Threshold: 2.0,
 							Weights:   []float64{1.0, 0.0, 1.0, 0.0},
+							Value:     1.1,
 						},
 					},
 				},

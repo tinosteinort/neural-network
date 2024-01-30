@@ -6,14 +6,19 @@ import (
 )
 
 type Network struct {
-	inputNeurons int
-	layers       [][]Neuron
-	activation   Activation
+	input      []Input
+	layers     [][]Neuron
+	activation Activation
 }
 
 type Neuron struct {
 	Weights   []float64
 	Threshold float64
+	Value     float64
+}
+
+type Input struct {
+	Value float64
 }
 
 type Activation struct {
@@ -22,12 +27,15 @@ type Activation struct {
 }
 
 func (n *Network) Run(input []float64) ([]float64, error) {
-	if len(input) != n.inputNeurons {
+	if len(input) != len(n.input) {
 		return nil, errors.New("input values does not match input neuron count")
 	}
 	var values = input
 	for _, layer := range n.layers {
 		values = n.calculateLayer(values, layer)
+		for i, _ := range layer {
+			layer[i].Value = values[i]
+		}
 	}
 	return values, nil
 }
@@ -41,15 +49,14 @@ func (n *Network) calculateLayer(layerInput []float64, layerNeurons []Neuron) []
 }
 
 type Builder struct {
-	inputNeurons int
-	layers       [][]Neuron
-	activation   Activation
+	input      []Input
+	layers     [][]Neuron
+	activation Activation
 }
 
-func NewBuilder(inputNeurons int, activation Activation) *Builder {
+func NewBuilder(activation Activation) *Builder {
 	return &Builder{
-		inputNeurons: inputNeurons,
-		activation:   activation,
+		activation: activation,
 	}
 }
 
@@ -58,11 +65,15 @@ func (b *Builder) Build() (*Network, error) {
 		return nil, errors.New("no layer defined")
 	}
 
+	if len(b.input) == 0 {
+		return nil, errors.New("no input specified")
+	}
+
 	var layers [][]Neuron
 	for layerIndex, layer := range b.layers {
 		for _, neuron := range layer {
 			if layerIndex == 0 {
-				if len(neuron.Weights) != b.inputNeurons {
+				if len(neuron.Weights) != len(b.input) {
 					return nil, errors.New("weight count does not match input neuron count")
 				}
 			} else {
@@ -76,10 +87,20 @@ func (b *Builder) Build() (*Network, error) {
 	}
 
 	return &Network{
-		inputNeurons: b.inputNeurons,
-		layers:       layers,
-		activation:   b.activation,
+		input:      b.input,
+		layers:     layers,
+		activation: b.activation,
 	}, nil
+}
+
+func (b *Builder) WithInputNeurons(inputNeurons int) *Builder {
+	b.input = make([]Input, inputNeurons)
+	return b
+}
+
+func (b *Builder) WithInput(input []Input) *Builder {
+	b.input = input
+	return b
 }
 
 func (b *Builder) WithLayer(neurons []Neuron) *Builder {

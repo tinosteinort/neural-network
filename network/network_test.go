@@ -13,8 +13,9 @@ var _ = Describe("Network", func() {
 	It("should create new network", func() {
 
 		_, err := network.NewBuilder(
-			2,
 			activation.StepFunction,
+		).WithInputNeurons(
+			2,
 		).WithLayer(
 			[]network.Neuron{{
 				Weights:   []float64{0.0, 1.0},
@@ -43,8 +44,9 @@ var _ = Describe("Network", func() {
 
 		// https://www.taralino.de/courses/neuralnetwork1/network
 		n, err := network.NewBuilder(
-			2,
 			activation.StepFunction,
+		).WithInputNeurons(
+			2,
 		).WithLayer(
 			[]network.Neuron{{
 				Weights:   []float64{0.0, 1.0},
@@ -60,8 +62,9 @@ var _ = Describe("Network", func() {
 	It("run network with step function", func() {
 
 		n, err := network.NewBuilder(
-			2,
 			activation.StepFunction,
+		).WithInputNeurons(
+			2,
 		).WithLayer(
 			[]network.Neuron{{
 				Weights:   []float64{0.0, 1.0},
@@ -111,8 +114,9 @@ var _ = Describe("Network", func() {
 		// https://www.taralino.de/courses/neuralnetwork/weights
 
 		n, err := network.NewBuilder(
-			2,
 			activation.SigmoidFunction,
+		).WithInputNeurons(
+			2,
 		).WithLayer(
 			[]network.Neuron{{
 				Weights:   []float64{-0.2, 1.2},
@@ -143,11 +147,57 @@ var _ = Describe("Network", func() {
 
 	Describe("Builder", func() {
 
+		It("needs input neurons - by number", func() {
+
+			_, err := network.NewBuilder(
+				activation.StepFunction,
+			).WithInputNeurons(
+				2,
+			).WithLayer(
+				[]network.Neuron{{
+					Weights: []float64{0.1, 0.2},
+				}},
+			).Build()
+
+			Expect(err).NotTo(HaveOccurred())
+		})
+
+		It("needs input neurons - with values", func() {
+
+			_, err := network.NewBuilder(
+				activation.StepFunction,
+			).WithInput([]network.Input{
+				{Value: 1.0},
+				{Value: 2.0},
+			},
+			).WithLayer(
+				[]network.Neuron{{
+					Weights: []float64{0.1, 0.2},
+				}},
+			).Build()
+
+			Expect(err).NotTo(HaveOccurred())
+		})
+
+		It("should not build network because of missing input", func() {
+
+			_, err := network.NewBuilder(
+				activation.StepFunction,
+			).WithLayer(
+				[]network.Neuron{{
+					Weights: []float64{0.1, 0.2},
+				}},
+			).Build()
+
+			Expect(err).To(Equal(errors.New("no input specified")))
+		})
+
 		It("needs at least one layer", func() {
 
 			_, err := network.NewBuilder(
-				2,
 				activation.StepFunction,
+			).WithInputNeurons(
+				2,
 			).Build()
 
 			Expect(err).To(Equal(errors.New("no layer defined")))
@@ -156,8 +206,9 @@ var _ = Describe("Network", func() {
 		It("weight-count need to match amount input neurons", func() {
 
 			_, err := network.NewBuilder(
-				2,
 				activation.StepFunction,
+			).WithInputNeurons(
+				2,
 			).WithLayer(
 				[]network.Neuron{{
 					Weights: []float64{0.0},
@@ -170,8 +221,9 @@ var _ = Describe("Network", func() {
 		It("weight-count need to match amount of previous layers neurons", func() {
 
 			_, err := network.NewBuilder(
-				2,
 				activation.StepFunction,
+			).WithInputNeurons(
+				2,
 			).WithLayer(
 				[]network.Neuron{{
 					Weights: []float64{0.0, 0.0},

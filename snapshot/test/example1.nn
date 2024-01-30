@@ -1,17 +1,26 @@
-input_neurons: 3
 activation: step
+input:
+    - value: 1
+    - value: 2
+    - value: 3
 layers:
     - neuron:
         - threshold: 1
           weights: [0, 1, 1]
+          value: 0.5
         - threshold: 2
           weights: [1, 1, 0]
+          value: 0.6
         - threshold: 3
           weights: [1, 0, 0]
+          value: 0.7
         - threshold: 3
           weights: [0, 0, 1]
+          value: 0.8
     - neuron:
         - threshold: 1
           weights: [0, 1, 0, 1]
+          value: 0.9
         - threshold: 2
           weights: [1, 0, 1, 0]
+          value: 1.1

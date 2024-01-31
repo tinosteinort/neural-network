@@ -55,94 +55,136 @@ var _ = Describe("Network", func() {
 		).Build()
 
 		Expect(err).To(BeNil())
-		_, err = n.Run([]float64{1.0})
+		err = n.Update([]float64{1.0})
 		Expect(err).To(Equal(errors.New("input values does not match input neuron count")))
 	})
 
-	It("run network with step function", func() {
+	Describe("update", func() {
+
+		It("update network with step function", func() {
+
+			n, err := network.NewBuilder(
+				activation.StepFunction,
+			).WithInputNeurons(
+				2,
+			).WithLayer(
+				[]network.Neuron{{
+					Weights:   []float64{0.0, 1.0},
+					Threshold: 1.0,
+				}, {
+					Weights:   []float64{1.0, 1.0},
+					Threshold: 2.0,
+				}, {
+					Weights:   []float64{1.0, 0.0},
+					Threshold: 0.0,
+				}},
+			).WithLayer(
+				[]network.Neuron{{
+					Weights:   []float64{0.0, 1.0, 0.0},
+					Threshold: 1.0,
+				}, {
+					Weights:   []float64{1.0, 0.0, 1.0},
+					Threshold: 2.0,
+				}},
+			).Build()
+			Expect(err).NotTo(HaveOccurred())
+
+			err = n.Update([]float64{0.0, 0.0})
+			Expect(err).To(BeNil())
+			result, err := n.Output(0)
+			Expect(result).To(Equal(0.0))
+			result, err = n.Output(1)
+			Expect(result).To(Equal(0.0))
+
+			err = n.Update([]float64{1.0, 0.0})
+			Expect(err).To(BeNil())
+			result, err = n.Output(0)
+			Expect(result).To(Equal(0.0))
+			result, err = n.Output(1)
+			Expect(result).To(Equal(0.0))
+
+			err = n.Update([]float64{0.0, 1.0})
+			Expect(err).To(BeNil())
+			result, err = n.Output(0)
+			Expect(result).To(Equal(0.0))
+			result, err = n.Output(1)
+			Expect(result).To(Equal(1.0))
+
+			err = n.Update([]float64{1.0, 1.0})
+			Expect(err).To(BeNil())
+			result, err = n.Output(0)
+			Expect(result).To(Equal(1.0))
+			result, err = n.Output(1)
+			Expect(result).To(Equal(1.0))
+		})
+
+		It("update network with another function", func() {
+
+			// https://www.taralino.de/courses/neuralnetwork2/activation
+			// https://www.taralino.de/courses/neuralnetwork/weights
+
+			n, err := network.NewBuilder(
+				activation.SigmoidFunction,
+			).WithInputNeurons(
+				2,
+			).WithLayer(
+				[]network.Neuron{{
+					Weights:   []float64{-0.2, 1.2},
+					Threshold: 0.3,
+				}, {
+					Weights:   []float64{0.8, -0.7},
+					Threshold: -0.1,
+				}, {
+					Weights:   []float64{1.0, 1.4},
+					Threshold: 0.6,
+				}},
+			).WithLayer(
+				[]network.Neuron{{
+					Weights:   []float64{-0.5, 1.1, -1.3},
+					Threshold: -1.7,
+				}, {
+					Weights:   []float64{0.9, -1.0, 0.6},
+					Threshold: 0.4,
+				}},
+			).Build()
+			Expect(err).NotTo(HaveOccurred())
+
+			err = n.Update([]float64{0.5, 0.8})
+			Expect(err).To(BeNil())
+			result, err := n.Output(0)
+			Expect(result).To(Equal(0.7230846231041326))
+			result, err = n.Output(1)
+			Expect(result).To(Equal(0.532152159729842))
+		})
+	})
+
+	It("validate output", func() {
 
 		n, err := network.NewBuilder(
 			activation.StepFunction,
 		).WithInputNeurons(
 			2,
-		).WithLayer(
-			[]network.Neuron{{
-				Weights:   []float64{0.0, 1.0},
-				Threshold: 1.0,
-			}, {
-				Weights:   []float64{1.0, 1.0},
-				Threshold: 2.0,
-			}, {
-				Weights:   []float64{1.0, 0.0},
-				Threshold: 0.0,
-			}},
-		).WithLayer(
-			[]network.Neuron{{
-				Weights:   []float64{0.0, 1.0, 0.0},
-				Threshold: 1.0,
-			}, {
-				Weights:   []float64{1.0, 0.0, 1.0},
-				Threshold: 2.0,
-			}},
-		).Build()
+		).WithLayer([]network.Neuron{
+			{Weights: []float64{0, 0}},
+			{Weights: []float64{0, 0}},
+		}).Build()
 		Expect(err).NotTo(HaveOccurred())
 
-		r, err := n.Run([]float64{0.0, 0.0})
-		Expect(err).To(BeNil())
-		Expect(r[0]).To(Equal(0.0))
-		Expect(r[1]).To(Equal(0.0))
+		result, err := n.Output(-1)
+		Expect(result).To(Equal(float64(0)))
+		Expect(err).To(Equal(errors.New("no output at -1")))
 
-		r, err = n.Run([]float64{1.0, 0.0})
-		Expect(err).To(BeNil())
-		Expect(r[0]).To(Equal(0.0))
-		Expect(r[1]).To(Equal(0.0))
-
-		r, err = n.Run([]float64{0.0, 1.0})
-		Expect(err).To(BeNil())
-		Expect(r[0]).To(Equal(0.0))
-		Expect(r[1]).To(Equal(1.0))
-
-		r, err = n.Run([]float64{1.0, 1.0})
-		Expect(err).To(BeNil())
-		Expect(r[0]).To(Equal(1.0))
-		Expect(r[1]).To(Equal(1.0))
-	})
-
-	It("run network with sigmoid function", func() {
-
-		// https://www.taralino.de/courses/neuralnetwork2/activation
-		// https://www.taralino.de/courses/neuralnetwork/weights
-
-		n, err := network.NewBuilder(
-			activation.SigmoidFunction,
-		).WithInputNeurons(
-			2,
-		).WithLayer(
-			[]network.Neuron{{
-				Weights:   []float64{-0.2, 1.2},
-				Threshold: 0.3,
-			}, {
-				Weights:   []float64{0.8, -0.7},
-				Threshold: -0.1,
-			}, {
-				Weights:   []float64{1.0, 1.4},
-				Threshold: 0.6,
-			}},
-		).WithLayer(
-			[]network.Neuron{{
-				Weights:   []float64{-0.5, 1.1, -1.3},
-				Threshold: -1.7,
-			}, {
-				Weights:   []float64{0.9, -1.0, 0.6},
-				Threshold: 0.4,
-			}},
-		).Build()
+		result, err = n.Output(0)
 		Expect(err).NotTo(HaveOccurred())
+		Expect(result).To(Equal(float64(0)))
 
-		r, err := n.Run([]float64{0.5, 0.8})
-		Expect(err).To(BeNil())
-		Expect(r[0]).To(Equal(0.7230846231041326))
-		Expect(r[1]).To(Equal(0.532152159729842))
+		result, err = n.Output(1)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(result).To(Equal(float64(0)))
+
+		result, err = n.Output(2)
+		Expect(result).To(Equal(float64(0)))
+		Expect(err).To(Equal(errors.New("no output at 2")))
 	})
 
 	Describe("Builder", func() {

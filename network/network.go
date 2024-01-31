@@ -22,9 +22,9 @@ type Activation struct {
 	Run  func(input []float64, n Neuron) float64
 }
 
-func (n *Network) Run(input []float64) ([]float64, error) {
+func (n *Network) Update(input []float64) error {
 	if len(input) != len(n.input) {
-		return nil, errors.New("input values does not match input neuron count")
+		return errors.New("input values does not match input neuron count")
 	}
 	var values = input
 	for _, layer := range n.layers {
@@ -33,7 +33,7 @@ func (n *Network) Run(input []float64) ([]float64, error) {
 			layer[i].Value = values[i]
 		}
 	}
-	return values, nil
+	return nil
 }
 
 func (n *Network) calculateLayer(layerInput []float64, layerNeurons []Neuron) []float64 {
@@ -42,6 +42,15 @@ func (n *Network) calculateLayer(layerInput []float64, layerNeurons []Neuron) []
 		result[lni] = n.activation.Run(layerInput, neuron)
 	}
 	return result
+}
+
+func (n *Network) Output(i int) (float64, error) {
+	outputLayer := n.layers[len(n.layers)-1]
+	if i < 0 || i >= len(outputLayer) {
+		//if i >= len(outputLayer) {
+		return float64(0), fmt.Errorf("no output at %d", i)
+	}
+	return outputLayer[i].Value, nil
 }
 
 type Builder struct {

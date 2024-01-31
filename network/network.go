@@ -44,13 +44,13 @@ func (n *Network) calculateLayer(layerInput []float64, layerNeurons []Neuron) []
 	return result
 }
 
-func (n *Network) Output(i int) (float64, error) {
+func (n *Network) Output() []float64 {
 	outputLayer := n.layers[len(n.layers)-1]
-	if i < 0 || i >= len(outputLayer) {
-		//if i >= len(outputLayer) {
-		return float64(0), fmt.Errorf("no output at %d", i)
+	result := make([]float64, len(outputLayer))
+	for ni, neuron := range outputLayer {
+		result[ni] = neuron.Value
 	}
-	return outputLayer[i].Value, nil
+	return result
 }
 
 type Builder struct {

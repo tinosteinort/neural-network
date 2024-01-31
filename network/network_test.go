@@ -91,31 +91,27 @@ var _ = Describe("Network", func() {
 
 			err = n.Update([]float64{0.0, 0.0})
 			Expect(err).To(BeNil())
-			result, err := n.Output(0)
-			Expect(result).To(Equal(0.0))
-			result, err = n.Output(1)
-			Expect(result).To(Equal(0.0))
+			result := n.Output()
+			Expect(result[0]).To(Equal(0.0))
+			Expect(result[1]).To(Equal(0.0))
 
 			err = n.Update([]float64{1.0, 0.0})
 			Expect(err).To(BeNil())
-			result, err = n.Output(0)
-			Expect(result).To(Equal(0.0))
-			result, err = n.Output(1)
-			Expect(result).To(Equal(0.0))
+			result = n.Output()
+			Expect(result[0]).To(Equal(0.0))
+			Expect(result[1]).To(Equal(0.0))
 
 			err = n.Update([]float64{0.0, 1.0})
 			Expect(err).To(BeNil())
-			result, err = n.Output(0)
-			Expect(result).To(Equal(0.0))
-			result, err = n.Output(1)
-			Expect(result).To(Equal(1.0))
+			result = n.Output()
+			Expect(result[0]).To(Equal(0.0))
+			Expect(result[1]).To(Equal(1.0))
 
 			err = n.Update([]float64{1.0, 1.0})
 			Expect(err).To(BeNil())
-			result, err = n.Output(0)
-			Expect(result).To(Equal(1.0))
-			result, err = n.Output(1)
-			Expect(result).To(Equal(1.0))
+			result = n.Output()
+			Expect(result[0]).To(Equal(1.0))
+			Expect(result[1]).To(Equal(1.0))
 		})
 
 		It("update network with another function", func() {
@@ -151,10 +147,9 @@ var _ = Describe("Network", func() {
 
 			err = n.Update([]float64{0.5, 0.8})
 			Expect(err).To(BeNil())
-			result, err := n.Output(0)
-			Expect(result).To(Equal(0.7230846231041326))
-			result, err = n.Output(1)
-			Expect(result).To(Equal(0.532152159729842))
+			result := n.Output()
+			Expect(result[0]).To(Equal(0.7230846231041326))
+			Expect(result[1]).To(Equal(0.532152159729842))
 		})
 	})
 
@@ -170,21 +165,11 @@ var _ = Describe("Network", func() {
 		}).Build()
 		Expect(err).NotTo(HaveOccurred())
 
-		result, err := n.Output(-1)
-		Expect(result).To(Equal(float64(0)))
-		Expect(err).To(Equal(errors.New("no output at -1")))
-
-		result, err = n.Output(0)
-		Expect(err).NotTo(HaveOccurred())
-		Expect(result).To(Equal(float64(0)))
-
-		result, err = n.Output(1)
-		Expect(err).NotTo(HaveOccurred())
-		Expect(result).To(Equal(float64(0)))
-
-		result, err = n.Output(2)
-		Expect(result).To(Equal(float64(0)))
-		Expect(err).To(Equal(errors.New("no output at 2")))
+		result := n.Output()
+		Expect(result).NotTo(BeNil())
+		Expect(len(result)).To(Equal(2))
+		Expect(result[0]).To(Equal(float64(0)))
+		Expect(result[1]).To(Equal(float64(0)))
 	})
 
 	Describe("Builder", func() {

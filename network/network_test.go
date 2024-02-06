@@ -114,7 +114,7 @@ var _ = Describe("Network", func() {
 			Expect(result[1]).To(Equal(1.0))
 		})
 
-		It("update network with another function", func() {
+		It("updates network with another function", func() {
 
 			// https://www.taralino.de/courses/neuralnetwork2/activation
 			// https://www.taralino.de/courses/neuralnetwork/weights
@@ -150,6 +150,30 @@ var _ = Describe("Network", func() {
 			result := n.Output()
 			Expect(result[0]).To(Equal(0.7230846231041326))
 			Expect(result[1]).To(Equal(0.532152159729842))
+		})
+
+		It("update network saves also input values", func() {
+
+			n, err := network.NewBuilder(
+				activation.StepFunction,
+			).WithInputNeurons(
+				2,
+			).WithLayer(
+				[]network.Neuron{{
+					Weights:   []float64{0.0, 1.0},
+					Threshold: 1.0,
+				}, {
+					Weights:   []float64{1.0, 1.0},
+					Threshold: 2.0,
+				}},
+			).Build()
+			Expect(err).NotTo(HaveOccurred())
+
+			err = n.Update([]float64{0.1, 0.4})
+			Expect(err).To(BeNil())
+
+			s := n.CreateSnapshot()
+			Expect(s.Input).To(Equal([]float64{0.1, 0.4}))
 		})
 	})
 

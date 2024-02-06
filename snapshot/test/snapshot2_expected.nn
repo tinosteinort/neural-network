@@ -1,0 +1,10 @@
+activation: step
+input: [0, 0]
+layers:
+    - neuron:
+        - threshold: 1
+          weights: [0, 1]
+          value: 50
+        - threshold: 2
+          weights: [1, 1]
+          value: 60

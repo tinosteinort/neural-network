@@ -11,46 +11,77 @@ import (
 
 var _ = Describe("Snapshot", func() {
 
-	It("should store network", func() {
+	Describe("store", func() {
 
-		n, err := network.NewBuilder(
-			activation.StepFunction,
-		).WithInput([]float64{
-			1.0, 2.0,
-		}).WithLayer(
-			[]network.Neuron{{
-				Weights:   []float64{0.0, 1.0},
-				Threshold: 1.0,
-				Value:     50.0,
-			}, {
-				Weights:   []float64{1.0, 1.0},
-				Threshold: 2.0,
-				Value:     60.0,
-			}, {
-				Weights:   []float64{1.0, 0.0},
-				Threshold: 0.0,
-				Value:     70.0,
-			}},
-		).WithLayer(
-			[]network.Neuron{{
-				Weights:   []float64{0.0, 1.0, 0.0},
-				Threshold: 1.0,
-				Value:     80.0,
-			}, {
-				Weights:   []float64{1.0, 0.0, 1.0},
-				Threshold: 2.0,
-				Value:     90.0,
-			}},
-		).Build()
+		It("should store network with input neuron values", func() {
 
-		Expect(err).NotTo(HaveOccurred())
-		Expect(snapshot.Store(n, "snapshot1.nn")).NotTo(HaveOccurred())
+			n, err := network.NewBuilder(
+				activation.StepFunction,
+			).WithInput([]float64{
+				1.0, 2.0,
+			}).WithLayer(
+				[]network.Neuron{{
+					Weights:   []float64{0.0, 1.0},
+					Threshold: 1.0,
+					Value:     50.0,
+				}, {
+					Weights:   []float64{1.0, 1.0},
+					Threshold: 2.0,
+					Value:     60.0,
+				}, {
+					Weights:   []float64{1.0, 0.0},
+					Threshold: 0.0,
+					Value:     70.0,
+				}},
+			).WithLayer(
+				[]network.Neuron{{
+					Weights:   []float64{0.0, 1.0, 0.0},
+					Threshold: 1.0,
+					Value:     80.0,
+				}, {
+					Weights:   []float64{1.0, 0.0, 1.0},
+					Threshold: 2.0,
+					Value:     90.0,
+				}},
+			).Build()
 
-		snapshot1, err := os.ReadFile("snapshot1.nn")
-		Expect(err).NotTo(HaveOccurred())
-		expected, err := os.ReadFile("snapshot1_expected.nn")
-		Expect(err).NotTo(HaveOccurred())
-		Expect(string(snapshot1)).To(Equal(string(expected)))
+			Expect(err).NotTo(HaveOccurred())
+			Expect(snapshot.Store(n, "snapshot1.nn")).NotTo(HaveOccurred())
+
+			snapshot1, err := os.ReadFile("snapshot1.nn")
+			Expect(err).NotTo(HaveOccurred())
+			expected, err := os.ReadFile("snapshot1_expected.nn")
+			Expect(err).NotTo(HaveOccurred())
+			Expect(string(snapshot1)).To(Equal(string(expected)))
+		})
+
+		It("should store network without input neuron values", func() {
+
+			n, err := network.NewBuilder(
+				activation.StepFunction,
+			).WithInputNeurons(
+				2,
+			).WithLayer(
+				[]network.Neuron{{
+					Weights:   []float64{0.0, 1.0},
+					Threshold: 1.0,
+					Value:     50.0,
+				}, {
+					Weights:   []float64{1.0, 1.0},
+					Threshold: 2.0,
+					Value:     60.0,
+				}},
+			).Build()
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(snapshot.Store(n, "snapshot2.nn")).NotTo(HaveOccurred())
+
+			snapshot1, err := os.ReadFile("snapshot2.nn")
+			Expect(err).NotTo(HaveOccurred())
+			expected, err := os.ReadFile("snapshot2_expected.nn")
+			Expect(err).NotTo(HaveOccurred())
+			Expect(string(snapshot1)).To(Equal(string(expected)))
+		})
 	})
 
 	It("should restore network", func() {

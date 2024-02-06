@@ -26,6 +26,9 @@ func (n *Network) Update(input []float64) error {
 	if len(input) != len(n.input) {
 		return errors.New("input values does not match input neuron count")
 	}
+
+	//n.input = input // TODO test
+
 	var values = input
 	for _, layer := range n.layers {
 		values = n.calculateLayer(values, layer)

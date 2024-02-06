@@ -10,6 +10,55 @@ import (
 
 var _ = Describe("Builder", func() {
 
+	It("should create new network", func() {
+
+		_, err := network.NewBuilder(
+			activation.StepFunction,
+		).WithInputNeurons(
+			2,
+		).WithLayer(
+			[]network.Neuron{{
+				Weights:   []float64{0.0, 1.0},
+				Threshold: 1.0,
+			}, {
+				Weights:   []float64{1.0, 1.0},
+				Threshold: 2.0,
+			}, {
+				Weights:   []float64{1.0, 0.0},
+				Threshold: 0.0,
+			}},
+		).WithLayer(
+			[]network.Neuron{{
+				Weights:   []float64{0.0, 1.0, 0.0},
+				Threshold: 1.0,
+			}, {
+				Weights:   []float64{1.0, 0.0, 1.0},
+				Threshold: 2.0,
+			}},
+		).Build()
+
+		Expect(err).To(BeNil())
+	})
+
+	It("should not create new network because of invalid number of input neurons", func() {
+
+		// https://www.taralino.de/courses/neuralnetwork1/network
+		n, err := network.NewBuilder(
+			activation.StepFunction,
+		).WithInputNeurons(
+			2,
+		).WithLayer(
+			[]network.Neuron{{
+				Weights:   []float64{0.0, 1.0},
+				Threshold: 1.0,
+			}},
+		).Build()
+
+		Expect(err).To(BeNil())
+		err = n.Update([]float64{1.0})
+		Expect(err).To(Equal(errors.New("input values does not match input neuron count")))
+	})
+
 	It("needs input neurons - by number", func() {
 
 		_, err := network.NewBuilder(

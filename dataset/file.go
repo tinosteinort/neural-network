@@ -13,16 +13,15 @@ type fileDataSet struct {
 }
 
 func (ds *fileDataSet) Next() (*Record, error) {
-	if ds.file != nil {
+	if ds.file == nil {
 		file, err := os.Open(ds.Filename)
 		if err != nil {
 			return nil, err
 		}
 		ds.file = file
 
-		s := bufio.NewScanner(ds.file)
-		s.Split(bufio.ScanLines)
-		ds.scanner = s
+		ds.scanner = bufio.NewScanner(ds.file)
+		ds.scanner.Split(bufio.ScanLines)
 	}
 
 	if ds.scanner == nil {

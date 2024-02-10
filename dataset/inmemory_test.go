@@ -12,7 +12,7 @@ var _ = Describe("Inmemory", func() {
 
 	It("gets record from inmemory dataset", func() {
 
-		ds := dataset.NewInMemoryDataSet(
+		ds := dataset.NewInMemory(
 			[]dataset.Record{{
 				Input:  []float64{0.4, 0.1},
 				Result: []float64{0, 1},
@@ -37,7 +37,7 @@ var _ = Describe("Inmemory", func() {
 
 	It("expects calling HasNext before Next", func() {
 
-		ds := dataset.NewInMemoryDataSet(
+		ds := dataset.NewInMemory(
 			[]dataset.Record{{
 				Input:  []float64{0.2},
 				Result: []float64{1, 0},
@@ -51,7 +51,7 @@ var _ = Describe("Inmemory", func() {
 
 	It("checks if next record exist", func() {
 
-		ds := dataset.NewInMemoryDataSet(
+		ds := dataset.NewInMemory(
 			[]dataset.Record{{
 				Input:  []float64{0.2},
 				Result: []float64{1, 0},
@@ -68,7 +68,7 @@ var _ = Describe("Inmemory", func() {
 
 	It("returns error if no next record exist but next is called", func() {
 
-		ds := dataset.NewInMemoryDataSet(
+		ds := dataset.NewInMemory(
 			[]dataset.Record{{
 				Input:  []float64{0.2},
 				Result: []float64{1, 0},

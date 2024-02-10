@@ -8,7 +8,7 @@ type inMemoryDataSet struct {
 	hasNext *bool
 }
 
-func NewInMemoryDataSet(records []Record) DataSet {
+func NewInMemory(records []Record) DataSet {
 	return &inMemoryDataSet{
 		Records: records,
 		index:   -1,

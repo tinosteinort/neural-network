@@ -11,7 +11,7 @@ var _ = Describe("File", func() {
 
 	It("reads records", func() {
 
-		ds, err := dataset.NewFileDataSet("example.ds")
+		ds, err := dataset.NewFromFile("example.ds")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ds).NotTo(BeNil())
 		defer ds.Close()
@@ -28,7 +28,7 @@ var _ = Describe("File", func() {
 
 	It("expects calling HasNext before Next", func() {
 
-		ds, err := dataset.NewFileDataSet("example.ds")
+		ds, err := dataset.NewFromFile("example.ds")
 		Expect(err).NotTo(HaveOccurred())
 		defer ds.Close()
 
@@ -39,7 +39,7 @@ var _ = Describe("File", func() {
 
 	It("checks if next record exist", func() {
 
-		ds, err := dataset.NewFileDataSet("example.ds")
+		ds, err := dataset.NewFromFile("example.ds")
 		Expect(err).NotTo(HaveOccurred())
 		defer ds.Close()
 
@@ -50,7 +50,7 @@ var _ = Describe("File", func() {
 
 	It("returns error if no next record exist but next is called", func() {
 
-		ds, err := dataset.NewFileDataSet("example.ds")
+		ds, err := dataset.NewFromFile("example.ds")
 		Expect(err).NotTo(HaveOccurred())
 		defer ds.Close()
 

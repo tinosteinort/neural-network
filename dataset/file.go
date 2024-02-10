@@ -15,7 +15,7 @@ type fileDataSet struct {
 	hasNext  *bool
 }
 
-func NewFileDataSet(filename string) (DataSet, error) {
+func NewFromFile(filename string) (DataSet, error) {
 	file, err := os.Open(filename)
 	if err != nil {
 		return nil, err

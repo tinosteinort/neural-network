@@ -43,7 +43,6 @@ var _ = Describe("Inmemory", func() {
 				Result: []float64{1, 0},
 			}},
 		)
-		defer ds.Close()
 
 		r, err := ds.Next()
 		Expect(err).To(Equal(errors.New("HasNext() was not called before Next()")))
@@ -61,7 +60,6 @@ var _ = Describe("Inmemory", func() {
 				Result: []float64{0, 1},
 			}},
 		)
-		defer ds.Close()
 
 		Expect(ds.HasNext()).To(BeTrue())
 		Expect(ds.HasNext()).To(BeTrue())
@@ -76,7 +74,6 @@ var _ = Describe("Inmemory", func() {
 				Result: []float64{1, 0},
 			}},
 		)
-		defer ds.Close()
 
 		Expect(ds.HasNext()).To(BeTrue())
 		Expect(ds.HasNext()).To(BeFalse())

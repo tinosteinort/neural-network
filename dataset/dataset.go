@@ -1,6 +1,7 @@
 package dataset
 
 type DataSet interface {
+	HasNext() bool
 	Next() (*Record, error)
 	Close() error
 }
@@ -14,10 +15,4 @@ func NewInMemoryDataSet(records []Record) DataSet {
 	return &inMemoryDataSet{
 		Records: records,
 	}
-}
-
-func NewFileDataSet(filename string) (DataSet, error) {
-	return &fileDataSet{
-		Filename: filename,
-	}, nil
 }

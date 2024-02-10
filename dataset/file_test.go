@@ -9,30 +9,42 @@ import (
 
 var _ = Describe("File", func() {
 
-	It("iterate over file dataset", func() {
+	It("reads records", func() {
 
 		ds, err := dataset.NewFileDataSet("example.ds")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ds).NotTo(BeNil())
+		defer ds.Close()
 
-		r1, err := ds.Next()
+		ds.HasNext()
+		r, err := ds.Next()
 		Expect(err).NotTo(HaveOccurred())
-		Expect(r1).NotTo(BeNil())
-		Expect(r1).To(Equal(&dataset.Record{
-			Input:  []float64{0.2},
+		Expect(r).NotTo(BeNil())
+		Expect(r).To(Equal(&dataset.Record{
+			Input:  []float64{0.1, 0.2},
 			Result: []float64{1, 0},
 		}))
+	})
 
-		r2, err := ds.Next()
+	It("checks if next record exist", func() {
+
+		ds, err := dataset.NewFileDataSet("example.ds")
 		Expect(err).NotTo(HaveOccurred())
-		Expect(r2).NotTo(BeNil())
-		Expect(r2).To(Equal(&dataset.Record{
-			Input:  []float64{0.6},
-			Result: []float64{0, 1},
-		}))
+		defer ds.Close()
 
-		r3, err := ds.Next()
-		Expect(err).To(Equal(errors.New("no records left in dataset")))
-		Expect(r3).To(BeNil())
+		Expect(ds.HasNext()).To(BeTrue())
+		Expect(ds.HasNext()).To(BeTrue())
+		Expect(ds.HasNext()).To(BeFalse())
+	})
+
+	It("expects calling HasNext before Next", func() {
+
+		ds, err := dataset.NewFileDataSet("example.ds")
+		Expect(err).NotTo(HaveOccurred())
+		defer ds.Close()
+
+		r, err := ds.Next()
+		Expect(err).To(Equal(errors.New("HasNext() was not called before Next()")))
+		Expect(r).To(BeNil())
 	})
 })

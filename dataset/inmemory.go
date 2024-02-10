@@ -7,6 +7,10 @@ type inMemoryDataSet struct {
 	index   int
 }
 
+func (ds *inMemoryDataSet) HasNext() bool {
+	return false
+}
+
 func (ds *inMemoryDataSet) Next() (*Record, error) {
 	if ds.index >= len(ds.Records) {
 		return nil, errors.New("no records left in dataset")

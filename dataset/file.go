@@ -12,29 +12,43 @@ type fileDataSet struct {
 	Filename string
 	file     *os.File
 	scanner  *bufio.Scanner
+	hasNext  *bool
+}
+
+func NewFileDataSet(filename string) (DataSet, error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+
+	ds := &fileDataSet{
+		Filename: filename,
+		file:     file,
+		scanner:  scanner,
+	}
+	return ds, nil
+}
+
+func (ds *fileDataSet) HasNext() bool {
+	hasNext := ds.scanner.Scan()
+	ds.hasNext = &hasNext
+	return hasNext
 }
 
 func (ds *fileDataSet) Next() (*Record, error) {
-	if ds.file == nil {
-		file, err := os.Open(ds.Filename)
-		if err != nil {
-			return nil, err
-		}
-		ds.file = file
-
-		ds.scanner = bufio.NewScanner(ds.file)
-		ds.scanner.Split(bufio.ScanLines)
+	if ds.hasNext == nil {
+		return nil, errors.New("HasNext() was not called before Next()")
 	}
 
-	if ds.scanner == nil {
-		return nil, errors.New("scanner ist null")
-	}
-
-	hasNext := ds.scanner.Scan()
-	if !hasNext {
+	if !*ds.hasNext {
 		return nil, errors.New("no records left in dataset")
 	}
 	l := ds.scanner.Text()
+
+	ds.hasNext = nil
 
 	return asRecord(&l)
 }

@@ -10,9 +10,3 @@ type Record struct {
 	Input  []float64
 	Result []float64
 }
-
-func NewInMemoryDataSet(records []Record) DataSet {
-	return &inMemoryDataSet{
-		Records: records,
-	}
-}

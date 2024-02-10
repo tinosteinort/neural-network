@@ -50,11 +50,11 @@ func (ds *fileDataSet) Next() (*Record, error) {
 
 	ds.hasNext = nil
 
-	return asRecord(&l)
+	return ds.asRecord(&l)
 }
 
-func asRecord(s *string) (*Record, error) {
-	input, result, err := parseLine(s)
+func (ds *fileDataSet) asRecord(s *string) (*Record, error) {
+	input, result, err := ds.parseLine(s)
 	if err != nil {
 		return nil, err
 	}
@@ -65,15 +65,15 @@ func asRecord(s *string) (*Record, error) {
 	}, nil
 }
 
-func parseLine(s *string) (input []float64, result []float64, err error) {
+func (ds *fileDataSet) parseLine(s *string) (input []float64, result []float64, err error) {
 	segments := strings.Split(*s, ";")
 
-	input, err = asFloats(&segments[0])
+	input, err = ds.asFloats(&segments[0])
 	if err != nil {
 		return nil, nil, err
 	}
 
-	result, err = asFloats(&segments[1])
+	result, err = ds.asFloats(&segments[1])
 	if err != nil {
 		return nil, nil, err
 	}
@@ -81,7 +81,7 @@ func parseLine(s *string) (input []float64, result []float64, err error) {
 	return input, result, nil
 }
 
-func asFloats(s *string) ([]float64, error) {
+func (ds *fileDataSet) asFloats(s *string) ([]float64, error) {
 	var floats []float64
 	for _, v := range strings.Split(*s, ",") {
 		f, err := strconv.ParseFloat(v, 64)

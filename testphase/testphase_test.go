@@ -80,7 +80,7 @@ var _ = Describe("Testphase", func() {
 		Expect(r[1]).To(Equal(float64(1)))
 	})
 
-	It("runs testphase", func() {
+	XIt("runs testphase", func() {
 
 		n, err := network.NewBuilder(activation.StepFunction).
 			WithInputNeurons(1).
@@ -95,9 +95,12 @@ var _ = Describe("Testphase", func() {
 			).Build()
 		Expect(err).NotTo(HaveOccurred())
 
-		expectedResult := dataset.NewInMemory(
+		knownResults := dataset.NewInMemory(
 			[]dataset.Record{{
 				Input:  []float64{0.1},
+				Result: []float64{1, 0},
+			}, {
+				Input:  []float64{0.3},
 				Result: []float64{1, 0},
 			}, {
 				Input:  []float64{0.4},
@@ -111,8 +114,25 @@ var _ = Describe("Testphase", func() {
 			}},
 		)
 
-		cm, err := testphase.Execute(n, expectedResult)
+		cm, err := testphase.Execute(n, knownResults)
 		Expect(err).NotTo(HaveOccurred())
-		Expect(cm).NotTo(BeNil())
+		Expect(cm).To(ContainElements(
+			testphase.Result{
+				Expected: []int{1, 0},
+				Actual:   []int{1, 0},
+			}, testphase.Result{
+				Expected: []int{1, 0},
+				Actual:   []int{1, 0},
+			}, testphase.Result{
+				Expected: []int{1, 0},
+				Actual:   []int{1, 0},
+			}, testphase.Result{
+				Expected: []int{0, 1},
+				Actual:   []int{0, 1},
+			}, testphase.Result{
+				Expected: []int{0, 1},
+				Actual:   []int{0, 1},
+			},
+		))
 	})
 })

@@ -15,10 +15,10 @@ var _ = Describe("Inmemory", func() {
 		ds := dataset.NewInMemory(
 			[]dataset.Record{{
 				Input:  []float64{0.4, 0.1},
-				Result: []float64{0, 1},
+				Result: []int{0, 1},
 			}, {
 				Input:  []float64{0.2, 0.3},
-				Result: []float64{1, 0},
+				Result: []int{1, 0},
 			}},
 		)
 
@@ -31,7 +31,7 @@ var _ = Describe("Inmemory", func() {
 		Expect(r).NotTo(BeNil())
 		Expect(r).To(Equal(&dataset.Record{
 			Input:  []float64{0.2, 0.3},
-			Result: []float64{1, 0},
+			Result: []int{1, 0},
 		}))
 	})
 
@@ -40,7 +40,7 @@ var _ = Describe("Inmemory", func() {
 		ds := dataset.NewInMemory(
 			[]dataset.Record{{
 				Input:  []float64{0.2},
-				Result: []float64{1, 0},
+				Result: []int{1, 0},
 			}},
 		)
 
@@ -54,10 +54,10 @@ var _ = Describe("Inmemory", func() {
 		ds := dataset.NewInMemory(
 			[]dataset.Record{{
 				Input:  []float64{0.2},
-				Result: []float64{1, 0},
+				Result: []int{1, 0},
 			}, {
 				Input:  []float64{0.6},
-				Result: []float64{0, 1},
+				Result: []int{0, 1},
 			}},
 		)
 
@@ -71,7 +71,7 @@ var _ = Describe("Inmemory", func() {
 		ds := dataset.NewInMemory(
 			[]dataset.Record{{
 				Input:  []float64{0.2},
-				Result: []float64{1, 0},
+				Result: []int{1, 0},
 			}},
 		)
 

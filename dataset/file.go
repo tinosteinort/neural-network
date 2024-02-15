@@ -65,7 +65,7 @@ func (ds *fileDataSet) asRecord(s *string) (*Record, error) {
 	}, nil
 }
 
-func (ds *fileDataSet) parseLine(s *string) (input []float64, result []float64, err error) {
+func (ds *fileDataSet) parseLine(s *string) (input []float64, result []int, err error) {
 	segments := strings.Split(*s, ";")
 
 	input, err = ds.asFloats(&segments[0])
@@ -73,7 +73,7 @@ func (ds *fileDataSet) parseLine(s *string) (input []float64, result []float64, 
 		return nil, nil, err
 	}
 
-	result, err = ds.asFloats(&segments[1])
+	result, err = ds.asInts(&segments[1])
 	if err != nil {
 		return nil, nil, err
 	}
@@ -91,6 +91,18 @@ func (ds *fileDataSet) asFloats(s *string) ([]float64, error) {
 		floats = append(floats, f)
 	}
 	return floats, nil
+}
+
+func (ds *fileDataSet) asInts(s *string) ([]int, error) {
+	var ints []int
+	for _, v := range strings.Split(*s, ",") {
+		f, err := strconv.Atoi(v)
+		if err != nil {
+			return nil, err
+		}
+		ints = append(ints, f)
+	}
+	return ints, nil
 }
 
 func (ds *fileDataSet) Close() error {

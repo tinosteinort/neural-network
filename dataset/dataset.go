@@ -8,5 +8,5 @@ type DataSet interface {
 
 type Record struct {
 	Input  []float64
-	Result []float64
+	Result []int
 }

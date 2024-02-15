@@ -22,7 +22,7 @@ var _ = Describe("File", func() {
 		Expect(r).NotTo(BeNil())
 		Expect(r).To(Equal(&dataset.Record{
 			Input:  []float64{0.1, 0.2},
-			Result: []float64{1, 0},
+			Result: []int{1, 0},
 		}))
 	})
 

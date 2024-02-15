@@ -98,19 +98,19 @@ var _ = Describe("Testphase", func() {
 		knownResults := dataset.NewInMemory(
 			[]dataset.Record{{
 				Input:  []float64{0.1},
-				Result: []float64{1, 0},
+				Result: []int{1, 0},
 			}, {
 				Input:  []float64{0.3},
-				Result: []float64{1, 0},
+				Result: []int{1, 0},
 			}, {
 				Input:  []float64{0.4},
-				Result: []float64{1, 0},
+				Result: []int{1, 0},
 			}, {
 				Input:  []float64{0.5},
-				Result: []float64{0, 1},
+				Result: []int{0, 1},
 			}, {
 				Input:  []float64{0.9},
-				Result: []float64{0, 1},
+				Result: []int{0, 1},
 			}},
 		)
 

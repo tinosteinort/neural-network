@@ -12,7 +12,11 @@ import (
 var _ = Describe("Testphase", func() {
 
 	It("builds specific network", func() {
-		// This network has two outputs
+		// This test just exist to create a network which behaves
+		// in a defined way for the given parameter, to test
+		// the confusion matix
+
+		// two outputs:
 		// if input < 0.5  than result is 1, 0
 		// if input >= 0.5 than result is 0, 1
 
@@ -80,59 +84,80 @@ var _ = Describe("Testphase", func() {
 		Expect(r[1]).To(Equal(float64(1)))
 	})
 
-	XIt("runs testphase", func() {
+	Describe("Confusion Matrix", func() {
 
-		n, err := network.NewBuilder(activation.StepFunction).
-			WithInputNeurons(1).
-			WithLayer(
-				[]network.Neuron{{
-					Weights:   []float64{-1},
-					Threshold: -0.4,
+		var n *network.Network
+
+		BeforeEach(func() {
+			var err error
+			n, err = network.NewBuilder(activation.StepFunction).
+				WithInputNeurons(1).
+				WithLayer(
+					[]network.Neuron{{
+						Weights:   []float64{-1},
+						Threshold: -0.4,
+					}, {
+						Weights:   []float64{1},
+						Threshold: 0.5,
+					}},
+				).Build()
+			Expect(err).NotTo(HaveOccurred())
+		})
+
+		It("gets expected results for known dataset", func() {
+
+			knownResults := dataset.NewInMemory(
+				[]dataset.Record{{
+					Input: []float64{0.1}, Result: []int{1, 0},
 				}, {
-					Weights:   []float64{1},
-					Threshold: 0.5,
+					Input: []float64{0.3}, Result: []int{1, 0},
+				}, {
+					Input: []float64{0.4}, Result: []int{1, 0},
+				}, {
+					Input: []float64{0.5}, Result: []int{0, 1},
+				}, {
+					Input: []float64{0.9}, Result: []int{0, 1},
 				}},
-			).Build()
-		Expect(err).NotTo(HaveOccurred())
+			)
 
-		knownResults := dataset.NewInMemory(
-			[]dataset.Record{{
-				Input:  []float64{0.1},
-				Result: []int{1, 0},
-			}, {
-				Input:  []float64{0.3},
-				Result: []int{1, 0},
-			}, {
-				Input:  []float64{0.4},
-				Result: []int{1, 0},
-			}, {
-				Input:  []float64{0.5},
-				Result: []int{0, 1},
-			}, {
-				Input:  []float64{0.9},
-				Result: []int{0, 1},
-			}},
-		)
+			cm, err := testphase.Execute(n, knownResults)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(cm).NotTo(BeNil())
+			Expect(cm.Results).To(ContainElements(
+				testphase.Evaluation{
+					Expected: []int{1, 0}, Actual: []int{1, 0},
+				}, testphase.Evaluation{
+					Expected: []int{1, 0}, Actual: []int{1, 0},
+				}, testphase.Evaluation{
+					Expected: []int{1, 0}, Actual: []int{1, 0},
+				}, testphase.Evaluation{
+					Expected: []int{0, 1}, Actual: []int{0, 1},
+				}, testphase.Evaluation{
+					Expected: []int{0, 1}, Actual: []int{0, 1},
+				},
+			))
+		})
 
-		cm, err := testphase.Execute(n, knownResults)
-		Expect(err).NotTo(HaveOccurred())
-		Expect(cm).To(ContainElements(
-			testphase.Result{
-				Expected: []int{1, 0},
-				Actual:   []int{1, 0},
-			}, testphase.Result{
-				Expected: []int{1, 0},
-				Actual:   []int{1, 0},
-			}, testphase.Result{
-				Expected: []int{1, 0},
-				Actual:   []int{1, 0},
-			}, testphase.Result{
-				Expected: []int{0, 1},
-				Actual:   []int{0, 1},
-			}, testphase.Result{
-				Expected: []int{0, 1},
-				Actual:   []int{0, 1},
-			},
-		))
+		It("?????", func() {
+
+			knownResults := dataset.NewInMemory(
+				[]dataset.Record{{
+					Input: []float64{0.1}, Result: []int{1, 0},
+				}, {
+					Input: []float64{0.3}, Result: []int{1, 0},
+				}, {
+					Input: []float64{0.4}, Result: []int{1, 0},
+				}, {
+					Input: []float64{0.5}, Result: []int{0, 1},
+				}, {
+					Input: []float64{0.9}, Result: []int{0, 1},
+				}},
+			)
+
+			cm, err := testphase.Execute(n, knownResults)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(cm).NotTo(BeNil())
+			// TODO count
+		})
 	})
 })

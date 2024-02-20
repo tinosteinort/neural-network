@@ -84,7 +84,7 @@ var _ = Describe("Testphase", func() {
 		Expect(r[1]).To(Equal(float64(1)))
 	})
 
-	Describe("Confusion Matrix", func() {
+	Describe("evaluate result", func() {
 
 		var n *network.Network
 
@@ -104,7 +104,7 @@ var _ = Describe("Testphase", func() {
 			Expect(err).NotTo(HaveOccurred())
 		})
 
-		It("gets expected results for known dataset", func() {
+		It("counts and calculates result", func() {
 
 			knownResults := dataset.NewInMemory(
 				[]dataset.Record{{
@@ -116,48 +116,28 @@ var _ = Describe("Testphase", func() {
 				}, {
 					Input: []float64{0.5}, Result: []int{0, 1},
 				}, {
-					Input: []float64{0.9}, Result: []int{0, 1},
+					Input: []float64{0.9}, Result: []int{1, 0}, // wrong on purpose
 				}},
 			)
 
-			cm, err := testphase.Execute(n, knownResults)
+			r, err := testphase.Execute(n, knownResults)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(cm).NotTo(BeNil())
-			Expect(cm.Results).To(ContainElements(
-				testphase.Evaluation{
-					Expected: []int{1, 0}, Actual: []int{1, 0},
-				}, testphase.Evaluation{
-					Expected: []int{1, 0}, Actual: []int{1, 0},
-				}, testphase.Evaluation{
-					Expected: []int{1, 0}, Actual: []int{1, 0},
-				}, testphase.Evaluation{
-					Expected: []int{0, 1}, Actual: []int{0, 1},
-				}, testphase.Evaluation{
-					Expected: []int{0, 1}, Actual: []int{0, 1},
-				},
-			))
+			Expect(r.Overall).To(Equal(5))
+			Expect(r.Correct).To(Equal(4))
+			Expect(r.Wrong).To(Equal(1))
+			Expect(r.SuccessRate).To(Equal(float64(80)))
 		})
+	})
 
-		It("?????", func() {
+	It("checks string representation to result", func() {
 
-			knownResults := dataset.NewInMemory(
-				[]dataset.Record{{
-					Input: []float64{0.1}, Result: []int{1, 0},
-				}, {
-					Input: []float64{0.3}, Result: []int{1, 0},
-				}, {
-					Input: []float64{0.4}, Result: []int{1, 0},
-				}, {
-					Input: []float64{0.5}, Result: []int{0, 1},
-				}, {
-					Input: []float64{0.9}, Result: []int{0, 1},
-				}},
-			)
+		r := testphase.Result{
+			Overall:     10,
+			Correct:     6,
+			Wrong:       4,
+			SuccessRate: float64(60),
+		}
 
-			cm, err := testphase.Execute(n, knownResults)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(cm).NotTo(BeNil())
-			// TODO count
-		})
+		Expect(r.String()).To(Equal("correct: 60.00 % (6/10)"))
 	})
 })

@@ -16,7 +16,7 @@ type SnapshotNeuron struct {
 	Value     float64   `yaml:"value"`
 }
 
-func (n *Network) CreateSnapshot() *Snapshot {
+func (n *staticNetwork) CreateSnapshot() *Snapshot {
 	var layers []SnapshotLayer
 	for _, layer := range n.layers {
 		var yn []SnapshotNeuron

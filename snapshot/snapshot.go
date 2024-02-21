@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func Store(n *network.Network, file string) error {
+func Store(n network.Network, file string) error {
 
 	f, err := os.Create(file)
 	if err != nil {
@@ -27,7 +27,7 @@ func Store(n *network.Network, file string) error {
 	return nil
 }
 
-func Restore(file string) (*network.Network, error) {
+func Restore(file string) (network.Network, error) {
 	s, err := readYaml(file)
 	if err != nil {
 		return nil, err

@@ -17,7 +17,7 @@ func NewBuilder(activation Activation) *Builder {
 	}
 }
 
-func (b *Builder) Build() (*Network, error) {
+func (b *Builder) Build() (Network, error) {
 	if len(b.layers) == 0 {
 		return nil, errors.New("no layer defined")
 	}
@@ -43,7 +43,7 @@ func (b *Builder) Build() (*Network, error) {
 		layers = append(layers, layer)
 	}
 
-	return &Network{
+	return &staticNetwork{
 		input:      b.input,
 		layers:     layers,
 		activation: b.activation,

@@ -14,7 +14,7 @@ type Result struct {
 	SuccessRate float64
 }
 
-func Execute(n *network.Network, ds dataset.DataSet) (r Result, err error) {
+func Execute(n network.Network, ds dataset.DataSet) (r Result, err error) {
 	for ok := ds.HasNext(); ok; ok = ds.HasNext() {
 
 		record, err := ds.Next()

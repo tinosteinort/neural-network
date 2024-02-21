@@ -86,7 +86,7 @@ var _ = Describe("Testphase", func() {
 
 	Describe("evaluate result", func() {
 
-		var n *network.Network
+		var n network.Network
 
 		BeforeEach(func() {
 			var err error

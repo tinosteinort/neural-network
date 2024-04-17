@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         build: [
-          { name: buildGo, platform: linux/amd64, os: ubuntu-latest, artifact: 'build/goMaze' },
+          { name: buildGo, platform: linux/amd64, os: ubuntu-latest, artifact: 'build/neural' },
         ]
     runs-on: ${{ matrix.build.os }}
     steps:

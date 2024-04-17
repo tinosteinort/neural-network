@@ -2,8 +2,8 @@ package testphase
 
 import (
 	"fmt"
-	"github.com/tinosteionrt/neural-network/dataset"
-	"github.com/tinosteionrt/neural-network/network"
+	"github.com/tinosteinort/neural-network/dataset"
+	"github.com/tinosteinort/neural-network/network"
 	"reflect"
 )
 

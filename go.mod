@@ -1,4 +1,4 @@
-module github.com/tinosteionrt/neural-network
+module github.com/tinosteinort/neural-network
 
 go 1.21.6
 

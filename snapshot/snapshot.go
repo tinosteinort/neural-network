@@ -1,8 +1,8 @@
 package snapshot
 
 import (
-	"github.com/tinosteionrt/neural-network/activation"
-	"github.com/tinosteionrt/neural-network/network"
+	"github.com/tinosteinort/neural-network/activation"
+	"github.com/tinosteinort/neural-network/network"
 	"gopkg.in/yaml.v3"
 	"os"
 )

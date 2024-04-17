@@ -3,10 +3,10 @@ package testphase_test
 import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	"github.com/tinosteionrt/neural-network/activation"
-	"github.com/tinosteionrt/neural-network/dataset"
-	"github.com/tinosteionrt/neural-network/network"
-	"github.com/tinosteionrt/neural-network/testphase"
+	"github.com/tinosteinort/neural-network/activation"
+	"github.com/tinosteinort/neural-network/dataset"
+	"github.com/tinosteinort/neural-network/network"
+	"github.com/tinosteinort/neural-network/testphase"
 )
 
 var _ = Describe("Testphase", func() {

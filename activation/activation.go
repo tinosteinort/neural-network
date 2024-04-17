@@ -2,7 +2,7 @@ package activation
 
 import (
 	"fmt"
-	"github.com/tinosteionrt/neural-network/network"
+	"github.com/tinosteinort/neural-network/network"
 	"math"
 )
 

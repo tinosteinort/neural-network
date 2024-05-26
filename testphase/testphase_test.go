@@ -14,7 +14,7 @@ var _ = Describe("Testphase", func() {
 	It("builds specific network", func() {
 		// This test just exist to create a network which behaves
 		// in a defined way for the given parameter, to test
-		// the confusion matix
+		// the confusion matrix
 
 		// two outputs:
 		// if input < 0.5  than result is 1, 0
@@ -86,7 +86,7 @@ var _ = Describe("Testphase", func() {
 
 	Describe("evaluate result", func() {
 
-		var n network.Network
+		var n *network.Network
 
 		BeforeEach(func() {
 			var err error
